@@ -1,6 +1,6 @@
 # ETHOS Labs - TEMPEST CubeSat
 
-    T.E.M.P.E.S.T is a purposefully vulnerable 1U CubeSat (Flat sat technically) that has been designed from the ground up for the purpose of not only teaching fundamental elements of Space Systems, but to do some with the focus on cybersecurity. It's hard to be sure but we believe this may be the first of its kind in terms of purpose and hardware. Not that it really matters.
+T.E.M.P.E.S.T (TEMPEST) is a purposefully vulnerable 1U CubeSat (Flat sat technically) that has been designed from the ground up for the purpose of not only teaching fundamental elements of Space Systems, but to do some with the focus on cybersecurity. It's hard to be sure but we believe this may be the first of its kind in terms of purpose and hardware. Not that it really matters.
 
 ![alt text](IMG_1958.jpg)
 
