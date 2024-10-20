@@ -1,0 +1,11 @@
+site_name: 'ETHOS Labs - Tempest Documentation'
+copyright: © 2024, ETHOS Labs, LLC  - Please Do Not Redistribute
+site_author: Tim Fowler
+
+theme:
+  name: readthedocs
+
+nav:
+  - Home: index.md
+  - Setup:
+    - Connecting to Your Wifi: connecting_to_wifi.md
