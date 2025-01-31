@@ -42,7 +42,7 @@
 
 ## Rails
 
-![alt text](image-45.png)
+![alt text](image-47.png)
 
 ## Hardware
 
