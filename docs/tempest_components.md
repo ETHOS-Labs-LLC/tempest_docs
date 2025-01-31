@@ -39,6 +39,11 @@
 
 ![alt text](image-41.png)
 
+
+## Rails
+
+![alt text](image-45.png)
+
 ## Hardware
 
 ![alt text](image-31.png)
