@@ -18,7 +18,7 @@ After downloading the image, you can check if the image is valid by generating S
 
  OR
 
- For TEMPEST v1.1, you can obtain the image here: [Tempest_v1.1.img]
+ For TEMPEST v1.1, you can obtain the image here: [Tempest_v1.1.img](https://drive.google.com/file/d/1K1Nw7Q_Xnd-AX9t3xWBUItROa7UGI167/view?usp=drive_link)
 
  ```SHA256: 1b8bcd935839535602cd83294fcc94d98414a8966752e596f9455d1c1249bfef```.
 
@@ -111,6 +111,7 @@ The FSW will more than likely be running before the entire network stack is up a
 After about 10 minutes, your TEMPEST CubeSat should be up as a device on your network, and you typically can retrieve the IP address by looking at your network’s DHCP leases. 
 
 After getting the IP address of your TEMPEST CubeSat, you will be able to SSH into it with the default credentials, or the ones you set when creating the microSD card.
+
 
 
 
