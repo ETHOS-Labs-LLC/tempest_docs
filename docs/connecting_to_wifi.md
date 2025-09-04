@@ -16,6 +16,12 @@ After downloading the image, you can check if the image is valid by generating S
 
  ```SHA256: B2B9A818FDA788B5C86BDEE69779F2D6651D71A360475ECEBFF68F761082B62E```.
 
+ OR
+
+ For TEMPEST v1.1, you can obtain the image here: [Tempest_v1.1.img]
+
+ ```SHA256: 1b8bcd935839535602cd83294fcc94d98414a8966752e596f9455d1c1249bfef```.
+
 Next you will want to take your microSD card out of TEMPEST by unscrewing the four T8 screws holding the X+ Solar Panel on the frame. If you do not know which panel is the X+ panel, if you are looking at the charging port/RBF pin panel, it will be on your left.
 
 Once you open the panel, you can remove the microSD card from the onboard Raspberry Pi Zero W located on the bottom side of the lower PCB.
@@ -105,6 +111,7 @@ The FSW will more than likely be running before the entire network stack is up a
 After about 10 minutes, your TEMPEST CubeSat should be up as a device on your network, and you typically can retrieve the IP address by looking at your network’s DHCP leases. 
 
 After getting the IP address of your TEMPEST CubeSat, you will be able to SSH into it with the default credentials, or the ones you set when creating the microSD card.
+
 
 
 
