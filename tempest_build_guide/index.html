@@ -1,104 +1,86 @@
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <meta name="author" content="Tim Fowler">
-  
-  <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Building Your CubeSat - ETHOS Labs - Tempest Documentation</title>
-  <link rel="stylesheet" href="../css/theme.css" />
-  <link rel="stylesheet" href="../css/theme_extra.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
-  <link href="../overrides/custom.css" rel="stylesheet" />
-  
-  <script>
-    // Current page data
-    var mkdocs_page_name = "Building Your CubeSat";
-    var mkdocs_page_input_path = "tempest_build_guide.md";
-    var mkdocs_page_url = null;
-  </script>
-  
-  <script src="../js/jquery-2.1.1.min.js" defer></script>
-  <script src="../js/modernizr-2.8.3.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script> 
-  
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Tim Fowler" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Building Your CubeSat - ETHOS Labs - Tempest Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../overrides/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Building Your CubeSat";
+        var mkdocs_page_input_path = "tempest_build_guide.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
 </head>
 
 <body class="wy-body-for-nav" role="document">
 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
-        <a href=".." class="icon icon-home"> ETHOS Labs - Tempest Documentation</a>
-        <div role="search">
+          <a href=".." class="icon icon-home"> ETHOS Labs - Tempest Documentation
+        </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
-                    </li>
-                </ul>
-                <p class="caption"><span class="caption-text">Build Guide</span></p>
-                <ul class="current">
-                    <li class="toctree-l1"><a class="reference internal" href="../tempest_components/">TEMPEST Components Guide</a>
-                    </li>
-                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Building Your CubeSat</a>
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Build Guide</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../tempest_components/">TEMPEST Components Guide</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Building Your CubeSat</a>
     <ul class="current">
     </ul>
-                    </li>
-                </ul>
-                <p class="caption"><span class="caption-text">Setup</span></p>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../connecting_to_wifi/">Connecting to Your Wifi</a>
-                    </li>
-                </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../connecting_to_wifi/">Connecting to Your Wifi</a>
+                  </li>
+              </ul>
       </div>
     </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="..">ETHOS Labs - Tempest Documentation</a>
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">ETHOS Labs - Tempest Documentation</a>
+        
       </nav>
-
-      
       <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="..">Docs</a> &raquo;</li>
-    
-      
-        
-          <li>Build Guide &raquo;</li>
-        
-      
-    
-    <li>Building Your CubeSat</li>
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Build Guide</li>
+      <li class="breadcrumb-item active">Building Your CubeSat</li>
     <li class="wy-breadcrumbs-aside">
-      
     </li>
   </ul>
-  
   <hr/>
 </div>
-          <div role="main">
-            <div class="section">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
               
                 <h1 id="building-your-tempest-cubesat">Building Your TEMPEST CubeSat</h1>
 <p><strong>This is the build guide for the TEMPEST v1.1 CubeSat (Feb 2025).</strong></p>
@@ -107,10 +89,10 @@
 <p>Carefully unlock the connector on the camera by gently pulling on each side of the black tab.</p>
 <p>Next slide the matching end of the ribbon cable into the slot on the camera, pin side down, and then gently push each side of the locking mechanism on the camera to secure the cable.</p>
 <p><img alt="alt text" src="../build_images/image.png" /></p>
-<p>Step 2: Take the Raspberry Pi Zero (<code>OBC</code>) out of the <code>OBC</code> bag.</p>
+<p>Step 2: Take the Raspberry Pi Zero  (<code>OBC</code>) out of the <code>OBC</code> bag.</p>
 <p><img alt="alt text" src="../build_images/image-2.png" /></p>
 <p>Find your microSD card and insert it into the microSD card slot on the left side of the board.</p>
-<p>Now from your <code>Hardware</code> bag, find the bag with three 11mm standoffs in it and take three M2.5x8mm T8 screws out of the bag of screws. </p>
+<p>Now from your <code>Hardware</code> bag, find the bag with three 11mm stand offs in it and take three M2.5x8mm T8 screws out of the bag of screws. </p>
 <p><img alt="alt text" src="../build_images/image-3.png" /></p>
 <p><img alt="alt text" src="../build_images/image-4.png" /></p>
 <p>Inserting the screws from the bottom of the <code>OBC</code>, secure the three 11mm standoffs onto the <code>OBC</code> as shown in the image. Note the top right hole will be left unpopulated. </p>
@@ -128,7 +110,7 @@
 <p><img alt="alt text" src="../build_images/image-11.png" /></p>
 <p>Now, carefully insert the  connector pins into the header on the bottom of the <code>EPS</code> board. Make sure to fully seat the header against one on the <code>EPS</code> board.</p>
 <p><img alt="alt text" src="../build_images/image-12.png" /></p>
-<p>Step 6: With the header stacked on the <code>EPS</code> board, carefully connect it to the assembly, taking care to align the pins and the standoffs. Start by getting everything aligned and then you can apply more pressure until the <code>EPS</code> board bottoms out on the top of the standoffs.</p>
+<p>Step 6: With the header stacked on the <code>EPS</code> board, carefully connect it to the assembly, taking care to align the pins and the standoffs. Start my getting everything aligned and then you can apply more pressure until the <code>EPS</code> board bottoms out on the top of the standoffs.</p>
 <p><img alt="alt text" src="../build_images/image-13.png" /></p>
 <p>Step 7: With the<code>EPS</code> board added to the assembly, take four (4) M2.5x20mm male standoffs and secure the<code>EPS</code> board down as shown below.</p>
 <p><img alt="alt text" src="../build_images/image-14.png" /></p>
@@ -138,9 +120,9 @@
 <p><img alt="alt text" src="../build_images/image-16.png" /></p>
 <p>You will need to identify the positive (+) terminal of your battery and make sure you match them up when inserting the battery.</p>
 <p><img alt="alt text" src="../build_images/image-17.png" /></p>
-<p>Step 10: The last step for the <code>EPS</code> board at this time is to find the 2x4 pin header on the upper left side of the board at the back. </p>
+<p>Step 10: The last step from the <code>EPS</code> board at this time is to find the 2x4 pin header on the upper left side of the board at the back. </p>
 <p><img alt="alt text" src="../build_images/image-18.png" /></p>
-<p>You will take your two (2) 1x4 header pins and insert one into each side of the 2x4 pin header as shown (your colors may vary).</p>
+<p>You will take your two (2) 1x4 header pins and insert one into each side of the 2x4 pin header as shown (our colors may vary).</p>
 <p><img alt="alt text" src="../build_images/image-19.png" /></p>
 <p>Step 11: Now you need to prep your <code>Payload/Comms</code> board. </p>
 <p><img alt="alt text" src="../build_images/image-20.png" /></p>
@@ -156,12 +138,12 @@
 <p><img alt="alt text" src="../build_images/image-26.png" /></p>
 <p>Step 15: This step can be a little tricky, as you will need to secure the bottom <code>Z-axis plate</code> onto the stack using four (4) M2.5x8mm screws. To do this you will need to fold the ribbon cable carefully as you put the plate on. Do not crimp or crease the ribbon. </p>
 <p><img alt="alt text" src="../build_images/image-28.png" /></p>
-<p>It is important that the plate be oriented correctly, with  the sides of the plate having four screw holes instead of two facing you and away from you. </p>
+<p>It is important that the plate be oriented correctly, with the camera lens cable facing away from you and the side of the plate having four screw holes instead of two. </p>
 <p>Once you have the plate oriented, you can screw it down using the four (4) screws into the standoffs as shown below.</p>
 <p><img alt="alt text" src="../build_images/image-27.png" /></p>
 <p>Step 16: Flip your assembly over and set it on the bottom plate. </p>
 <p><img alt="alt text" src="../build_images/image-29.png" /></p>
-<p>Grab the two (2) <code>SMA pigtails</code> from the<code>Antenna</code> bag. Starting on the left side, attach the straight end of the <code>SMA pigtail</code> to the SMA connector on the <code>Payload</code> board by screwing it on. Bring the rest of the pigtail so that it sits in between the two front stand offs as shown. </p>
+<p>Grab the two (2)<code>SMA pigtails</code> from the<code>Antenna</code> bag. Starting on the left side, attach the straight end of the <code>SMA pigtail</code> to the SMA connector on the <code>Payload</code> board by screwing it on. Bring the rest of the pigtail so that is sits in between the two front stand offs as shown. </p>
 <p><img alt="alt text" src="../build_images/image-30.png" /></p>
 <p>Next, take the front right standoff of the stack for a moment and set it aside. </p>
 <p><img alt="alt text" src="../build_images/image-31.png" /></p>
@@ -177,16 +159,16 @@
 <p><img alt="alt text" src="../build_images/image-37.png" /></p>
 <p>Using four (4) screws secure the plate to the stack, making sure the edge of the plate that is facing you (X+ axis) has four (4) screw holes in it.</p>
 <p><img alt="alt text" src="../build_images/image-36.png" /></p>
-<p>Step 18: Find the bag labeled <code>Rails</code> and take them out of the bag. You will also need eight (8) M2.5x8mm T8 screws for this step. Once you have the rails and screws, you can gently add the rails to the assembly and secure them in place with two (2) screws per rail, one on each of the Z-axis plates. Do this for all four (4) corners.</p>
+<p>Step 18: Find the bag labels<code>Rails</code> and take them out of the bag. You will also need eight (8) M2.5x8mm T8 screws for this step. Once you have the rails and screws, you can gently add the rails to the assembly and secure them in place with two (2) screws per rail, one on each of the Z-axis plates. Do this for all four (4) corners.</p>
 <p><img alt="alt text" src="../build_images/image-38.png" /></p>
-<p>Step 19: In your connector bag you will have a single two-wire jumper. Using the jumper, you will need to connect the <code>Solar</code> board and <code>EPS</code> board using the connectors on the right-hand side of the assembly if you rotate it 90 degrees counterclockwise so that the<code>Y+ axis</code> is facing you.</p>
+<p>Step 19: In your connector bag you will have a single two-wire jumper. Using the jumper, you will need to connect the <code>Solar</code> board and <code>EPS</code> board using the connectors on the right-hand side of the assembly if you rotate it 90 degrees counter-clockwise so that the<code>Y+ axis</code> is facing you.</p>
 <p><img alt="alt text" src="../build_images/image-43.png" /></p>
 <p><img alt="alt text" src="../build_images/image-39.png" /></p>
-<p>You can tuck the excess wire in between the two boards as shown below.</p>
+<p>You can tuck the excess wire in beteen the two boards as shown below.</p>
 <p><img alt="alt text" src="../build_images/image-44.png" /></p>
-<p>Step 20: Now open your <code>Solar Panel</code> bag and find the three (3) single solar panel PCBs. You will also need twelve (12) M2.5x8mm T8 screws for this step. Starting on the <code>Y+ axis</code>, you can connect the jumper lead from the PCB to the solar board, then using four (4) screws, secure the PCB to the assembly. </p>
+<p>Step 20: Now open your <code>Solar Panel</code> bag and find the three (3) single panel PCBs. You will also need twelve (12) M2.5x8mm T8 screws for this step. Staring on the <code>Y+ axis</code>, you can connect the jumper lead from the PCB to the solar board, then using four (4) screws, secure the PCB to the assembly. </p>
 <p><img alt="alt text" src="../build_images/image-45.png" /></p>
-<p>Repeat the same steps for the<code>Y-</code> axis. Note that the <code>Solar</code> board has lettering indicating which axis it is.</p>
+<p>Repeat the same steps for the<code>Y-</code> axis. Note that the <code>Solar</code> board has lettering indicating which axis it what.</p>
 <p><img alt="alt text" src="../build_images/image-46.png" /></p>
 <p>Repeat the same steps for the <code>X-</code>axis. </p>
 <p><img alt="alt text" src="../build_images/image-47.png" /></p>
@@ -194,38 +176,29 @@
 <p><img alt="alt text" src="../build_images/image-41.png" /></p>
 <p>Step 22: You should have just a single PCB left, which has two solar panels on it. You will need it and four (4) M2.5x8mm T8 screws for this step. Just like the previous step, you will be installing this panel, however you must first remove the RBF pin. Doing so will cause the CubeSat to power up. </p>
 <p>You will see some flashing lights from the EPS board as well as hear some beeps from the on-board buzzer.</p>
-<p>These are all good signs things are working as expected. Now, connect the jumper lead to the X+ connector on the <code>Solar</code> board. </p>
+<p>These are all good signs things are working as expected. Now, connect the jump lead to the X+ connector on the <code>Solar</code> board. </p>
 <p><img alt="alt text" src="../build_images/image-48.png" /></p>
 <p>Then you can hold the PCB panel up to the X+ axis and then through the hole that aligns with the RBF pin jack, replace the RBF pin and then you can secure the panel with the four (4) remaining screws.</p>
 <p><img alt="alt text" src="../build_images/image-40.png" /></p>
 <p>Congratulations, your CubeSat should now be assembled!</p>
               
             </div>
-          </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../tempest_components/" class="btn btn-neutral float-left" title="TEMPEST Components Guide"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../connecting_to_wifi/" class="btn btn-neutral float-right" title="Connecting to Your Wifi">Next <span class="icon icon-circle-arrow-right"></span></a>
-      
-      
-        <a href="../tempest_components/" class="btn btn-neutral" title="TEMPEST Components Guide"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-      
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <!-- Copyright etc -->
-    
       <p>© 2024, ETHOS Labs, LLC  - Please Do Not Redistribute</p>
-    
   </div>
 
-  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-      
+          
         </div>
       </div>
 
@@ -233,24 +206,26 @@
 
   </div>
 
-  <div class="rst-versions" role="note" aria-label="versions">
-    <span class="rst-current-version" data-toggle="rst-current-version">
-      
-      
-        <span><a href="../tempest_components/" style="color: #fcfcfc;">&laquo; Previous</a></span>
-      
-      
-        <span style="margin-left: 15px"><a href="../connecting_to_wifi/" style="color: #fcfcfc">Next &raquo;</a></span>
-      
-    </span>
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../tempest_components/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../connecting_to_wifi/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
 </div>
-    <script>var base_url = '..';</script>
-    <script src="../js/theme.js" defer></script>
-      <script src="../search/main.js" defer></script>
-    <script defer>
-        window.onload = function () {
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
-        };
+        });
     </script>
 
 </body>
