@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="ETHOS Labs, LLC" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Telemetry ID Quick Reference - TEMPEST Flight Software</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../overrides/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Telemetry ID Quick Reference";
+        var mkdocs_page_input_path = "reference/telemetry-ids.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> TEMPEST Flight Software
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Build Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_components/">TEMPEST Components Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_build_guide/">Building Your CubeSat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to Your Wifi</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Flight Software</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/commands/">Command Protocol</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/telemetry/">Telemetry Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/subsystems/">Subsystems</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/sensor-mcu/">Sensor MCU (RP2040)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/configuration/">Configuration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Ground Station</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/interface/">WebSerial Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/packet-parsing/">Packet Parsing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/image-transfer/">Image Transfer</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/radio-config/">Radio Configuration</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Telemetry ID Quick Reference</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#all-telemetry-identifiers">All Telemetry Identifiers</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#response-categories">Response Categories</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#fixed-size-binary-structpack">Fixed-Size Binary (struct.pack)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#multi-packet-chunked-newline-delimited">Multi-Packet Chunked (newline-delimited)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#image-transfer-newline-delimited">Image Transfer (newline-delimited)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#variable-length-binary">Variable-Length Binary</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#struct-format-codes">Struct Format Codes</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../packet-sizes/">Packet Size Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">TEMPEST Flight Software</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Reference</li>
+      <li class="breadcrumb-item active">Telemetry ID Quick Reference</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="telemetry-id-quick-reference">Telemetry ID Quick Reference</h1>
+<h2 id="all-telemetry-identifiers">All Telemetry Identifiers</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Size (bytes)</th>
+<th>Format</th>
+<th>Source Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POLL</code></td>
+<td>Environmental Poll</td>
+<td>Variable</td>
+<td><code>4s + I + Nf</code></td>
+<td><code>ENV_POLL</code></td>
+</tr>
+<tr>
+<td><code>ADCS</code></td>
+<td>Attitude Determination</td>
+<td>32</td>
+<td><code>4s + 7f</code></td>
+<td><code>GET_ORIENTATION</code></td>
+</tr>
+<tr>
+<td><code>BME2</code></td>
+<td>BME280 Environment</td>
+<td>16</td>
+<td><code>4s + 3f</code></td>
+<td><code>GET_BME</code></td>
+</tr>
+<tr>
+<td><code>GYRO</code></td>
+<td>Gyroscope</td>
+<td>16</td>
+<td><code>4s + 3f</code></td>
+<td><code>GET_GYRO</code></td>
+</tr>
+<tr>
+<td><code>ACCL</code></td>
+<td>Accelerometer</td>
+<td>16</td>
+<td><code>4s + 3f</code></td>
+<td><code>GET_ACCEL</code></td>
+</tr>
+<tr>
+<td><code>MAGN</code></td>
+<td>Magnetometer</td>
+<td>16</td>
+<td><code>4s + 3f</code></td>
+<td><code>GET_MAG</code></td>
+</tr>
+<tr>
+<td><code>TEMP</code></td>
+<td>Temperature</td>
+<td>8</td>
+<td><code>4s + i</code></td>
+<td><code>GET_TEMP</code></td>
+</tr>
+<tr>
+<td><code>GRAV</code></td>
+<td>Gravity Vector</td>
+<td>16</td>
+<td><code>4s + 3f</code></td>
+<td><code>GET_GRAVITY</code></td>
+</tr>
+<tr>
+<td><code>EULR</code></td>
+<td>Euler Angles</td>
+<td>16</td>
+<td><code>4s + 3f</code></td>
+<td><code>GET_EULER</code></td>
+</tr>
+<tr>
+<td><code>QUAT</code></td>
+<td>Quaternion</td>
+<td>20</td>
+<td><code>4s + 4f</code></td>
+<td><code>GET_QUATERNION</code></td>
+</tr>
+<tr>
+<td><code>SOLR</code></td>
+<td>Solar Panels</td>
+<td>36</td>
+<td><code>4s + 8f</code></td>
+<td><code>GET_SOLAR</code></td>
+</tr>
+<tr>
+<td><code>HOST</code></td>
+<td>Hostname</td>
+<td>15</td>
+<td><code>4s + 11s</code></td>
+<td><code>GET_HOSTNAME</code></td>
+</tr>
+<tr>
+<td><code>PHOT</code></td>
+<td>Photo Captured</td>
+<td>Variable</td>
+<td><code>4s + I + data</code></td>
+<td><code>TAKE_PHOTO</code></td>
+</tr>
+<tr>
+<td><code>OBCP</code></td>
+<td>Process List</td>
+<td>Variable</td>
+<td><code>4s + text</code></td>
+<td><code>OBC_PROCESSES</code></td>
+</tr>
+<tr>
+<td><code>OBCC</code></td>
+<td>CPU Usage</td>
+<td>8</td>
+<td><code>4s + f</code></td>
+<td><code>OBC_CPU</code></td>
+</tr>
+<tr>
+<td><code>OBCR</code></td>
+<td>RAM Usage</td>
+<td>8</td>
+<td><code>4s + f</code></td>
+<td><code>OBC_RAM</code></td>
+</tr>
+<tr>
+<td><code>OBCD</code></td>
+<td>Disk Usage</td>
+<td>8</td>
+<td><code>4s + f</code></td>
+<td><code>OBC_DISK</code></td>
+</tr>
+<tr>
+<td><code>OBCL</code></td>
+<td>File Listing</td>
+<td>Variable</td>
+<td><code>4s + text</code></td>
+<td><code>OBC_LIST_FILES</code></td>
+</tr>
+<tr>
+<td><code>SEND</code></td>
+<td>Image Data</td>
+<td>Variable</td>
+<td>Text</td>
+<td><code>SEND_IMAGE</code></td>
+</tr>
+<tr>
+<td><code>RETX</code></td>
+<td>Retransmit Data</td>
+<td>Variable</td>
+<td>Text</td>
+<td><code>RETRANSMIT</code></td>
+</tr>
+<tr>
+<td><code>EPSS</code></td>
+<td>EPS Status</td>
+<td>28</td>
+<td><code>4s + 5i + f</code></td>
+<td><code>EPS_STATUS</code></td>
+</tr>
+<tr>
+<td><code>BECN</code></td>
+<td>Health Beacon</td>
+<td>24</td>
+<td><code>4s + I + 4f</code></td>
+<td><code>BEACON_ON</code></td>
+</tr>
+<tr>
+<td><code>XFRC</code></td>
+<td>Transfer Complete</td>
+<td>8</td>
+<td><code>4s + I</code></td>
+<td>(auto after SEND_IMAGE)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="response-categories">Response Categories</h2>
+<h3 id="fixed-size-binary-structpack">Fixed-Size Binary (struct.pack)</h3>
+<p>These packets always have the same size and are parsed using known byte offsets:</p>
+<pre><code>GYRO, ACCL, MAGN, GRAV, EULR  →  16 bytes (3 floats)
+BME2                            →  16 bytes (3 floats)
+TEMP                            →   8 bytes (1 int)
+QUAT                            →  20 bytes (4 floats)
+ADCS                            →  32 bytes (7 floats)
+SOLR                            →  36 bytes (8 floats)
+EPSS                            →  28 bytes (5 ints + 1 float)
+OBCC, OBCR, OBCD               →   8 bytes (1 float)
+HOST                            →  15 bytes (11-char string)
+BECN                            →  24 bytes (1 uint + 4 floats)
+XFRC                            →   8 bytes (1 uint)
+</code></pre>
+<h3 id="multi-packet-chunked-newline-delimited">Multi-Packet Chunked (newline-delimited)</h3>
+<p>These are split across multiple radio packets. The ground station accumulates chunks and flushes after a 1-second timeout:</p>
+<pre><code>OBCP  →  Process list (chunked text)
+OBCL  →  File listing (chunked text)
+</code></pre>
+<h3 id="image-transfer-newline-delimited">Image Transfer (newline-delimited)</h3>
+<pre><code>SEND  →  Base64 image chunk + 8-digit metadata
+RETX  →  Retransmitted image chunk
+</code></pre>
+<h3 id="variable-length-binary">Variable-Length Binary</h3>
+<pre><code>POLL  →  Length-prefixed sensor data
+PHOT  →  Length-prefixed filename
+</code></pre>
+<h2 id="struct-format-codes">Struct Format Codes</h2>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Python Type</th>
+<th>Size</th>
+<th>JavaScript Equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>s</code></td>
+<td>char</td>
+<td>1 byte</td>
+<td><code>TextDecoder</code></td>
+</tr>
+<tr>
+<td><code>i</code></td>
+<td>int32</td>
+<td>4 bytes</td>
+<td><code>DataView.getInt32(offset, true)</code></td>
+</tr>
+<tr>
+<td><code>I</code></td>
+<td>uint32</td>
+<td>4 bytes</td>
+<td><code>DataView.getUint32(offset, true)</code></td>
+</tr>
+<tr>
+<td><code>f</code></td>
+<td>float32</td>
+<td>4 bytes</td>
+<td><code>DataView.getFloat32(offset, true)</code></td>
+</tr>
+</tbody>
+</table>
+<p>All multi-byte values use <strong>little-endian</strong> byte order (the <code>true</code> parameter in JavaScript DataView methods).</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../ground-station/radio-config/" class="btn btn-neutral float-left" title="Radio Configuration"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../packet-sizes/" class="btn btn-neutral float-right" title="Packet Size Reference">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>&copy; 2024 ETHOS Labs, LLC</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../ground-station/radio-config/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../packet-sizes/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

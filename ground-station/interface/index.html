@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="ETHOS Labs, LLC" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>WebSerial Interface - TEMPEST Flight Software</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../overrides/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "WebSerial Interface";
+        var mkdocs_page_input_path = "ground-station/interface.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> TEMPEST Flight Software
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Build Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_components/">TEMPEST Components Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_build_guide/">Building Your CubeSat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to Your Wifi</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Flight Software</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/commands/">Command Protocol</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/telemetry/">Telemetry Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/subsystems/">Subsystems</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/sensor-mcu/">Sensor MCU (RP2040)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/configuration/">Configuration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Ground Station</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">WebSerial Interface</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#connecting-to-the-ground-station">Connecting to the Ground Station</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#step-1-open-the-interface">Step 1: Open the Interface</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#step-2-connect">Step 2: Connect</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#step-3-configure-radios-if-needed">Step 3: Configure Radios (if needed)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#sending-commands">Sending Commands</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#text-input">Text Input</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#quick-commands">Quick Commands</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#all-commands-reference">All Commands Reference</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#event-log">Event Log</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#live-telemetry">Live Telemetry</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#onboard-computer">Onboard Computer</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#power-system">Power System</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#solar-panels">Solar Panels</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#satellite-orientation-3d">Satellite Orientation (3D)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#classification-banners">Classification Banners</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#soft-reset">Soft Reset</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../packet-parsing/">Packet Parsing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../image-transfer/">Image Transfer</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../radio-config/">Radio Configuration</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/telemetry-ids/">Telemetry ID Quick Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/packet-sizes/">Packet Size Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">TEMPEST Flight Software</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Ground Station</li>
+      <li class="breadcrumb-item active">WebSerial Interface</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="webserial-interface">WebSerial Interface</h1>
+<h2 id="connecting-to-the-ground-station">Connecting to the Ground Station</h2>
+<h3 id="step-1-open-the-interface">Step 1: Open the Interface</h3>
+<p>Navigate to the ground station URL in Chrome or Edge. The interface loads with all controls disabled until a serial connection is established.</p>
+<p><img alt="Placeholder: Initial disconnected state" src="../img/placeholder-gs-disconnected.png" /></p>
+<h3 id="step-2-connect">Step 2: Connect</h3>
+<ol>
+<li>Click <strong>"Connect to Ground Station"</strong></li>
+<li>A browser dialog appears listing available serial ports</li>
+<li>Select the GS Pico MCU USB port</li>
+<li>The connection establishes with default serial parameters:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Baud Rate</td>
+<td>115200</td>
+</tr>
+<tr>
+<td>Data Bits</td>
+<td>8</td>
+</tr>
+<tr>
+<td>Stop Bits</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Parity</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Flow Control</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<p>Upon successful connection:</p>
+<ul>
+<li>The status indicator turns green</li>
+<li>GSB Serial monitor shows "On" with a green status symbol</li>
+<li>Command input and buttons become enabled</li>
+<li>The event log shows "Connected to serial port"</li>
+</ul>
+<p><img alt="Placeholder: Connected state with green indicators" src="../img/placeholder-gs-connected.png" /></p>
+<h3 id="step-3-configure-radios-if-needed">Step 3: Configure Radios (if needed)</h3>
+<p>The Radio Configuration panel lets you set uplink and downlink parameters independently:</p>
+<ul>
+<li><strong>Radio Type</strong>: RFM95 (LoRa) or RFM69 (FSK)</li>
+<li><strong>Band</strong>: 433 MHz, 868 MHz, or 915 MHz</li>
+<li><strong>Frequency</strong>: Specific frequency within the selected band</li>
+<li><strong>Node Address</strong>: Satellite node (uplink) / Ground node (downlink)</li>
+</ul>
+<p>Click <strong>"Apply Configuration"</strong> to send configuration commands to the GS Pico MCU.</p>
+<p><img alt="Placeholder: Radio configuration panel" src="../img/placeholder-gs-radio-config.png" /></p>
+<h2 id="sending-commands">Sending Commands</h2>
+<h3 id="text-input">Text Input</h3>
+<p>Type any command in the command input field and press Enter or click <strong>"Send Command"</strong>. The command is sent to the GS Pico MCU which forwards it via radio.</p>
+<h3 id="quick-commands">Quick Commands</h3>
+<p>Preset buttons send common commands with a single click:</p>
+<table>
+<thead>
+<tr>
+<th>Button</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Solar</td>
+<td><code>GET_SOLAR</code></td>
+</tr>
+<tr>
+<td>EPS</td>
+<td><code>EPS_STATUS</code></td>
+</tr>
+<tr>
+<td>Gyro</td>
+<td><code>GET_GYRO</code></td>
+</tr>
+<tr>
+<td>Orient</td>
+<td><code>GET_ORIENTATION</code></td>
+</tr>
+<tr>
+<td>BME</td>
+<td><code>GET_BME</code></td>
+</tr>
+<tr>
+<td>Accel</td>
+<td><code>GET_ACCEL</code></td>
+</tr>
+<tr>
+<td>Mag</td>
+<td><code>GET_MAG</code></td>
+</tr>
+<tr>
+<td>Temp</td>
+<td><code>GET_TEMP</code></td>
+</tr>
+<tr>
+<td>Disk</td>
+<td><code>OBC_DISK</code></td>
+</tr>
+<tr>
+<td>RAM</td>
+<td><code>OBC_RAM</code></td>
+</tr>
+<tr>
+<td>Proc</td>
+<td><code>OBC_PROCESSES</code></td>
+</tr>
+<tr>
+<td>Host</td>
+<td><code>GET_HOSTNAME</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="all-commands-reference">All Commands Reference</h3>
+<p>Click <strong>"All Commands"</strong> to display the full command list in the event log. See <a href="../../fsw/commands/">Command Protocol</a> for detailed documentation.</p>
+<h2 id="event-log">Event Log</h2>
+<p>The event log (terminal) displays all communication with timestamps:</p>
+<table>
+<thead>
+<tr>
+<th>Message Type</th>
+<th>Color</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>info</code></td>
+<td>Default</td>
+<td>System messages, help text</td>
+</tr>
+<tr>
+<td><code>command</code></td>
+<td>Accent</td>
+<td>Commands sent to satellite</td>
+</tr>
+<tr>
+<td><code>response</code></td>
+<td>Green</td>
+<td>Telemetry data received</td>
+</tr>
+<tr>
+<td><code>warning</code></td>
+<td>Yellow</td>
+<td>Validation warnings, missing packets</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>Red</td>
+<td>Connection errors, parse failures</td>
+</tr>
+</tbody>
+</table>
+<p>Click <strong>"Clear"</strong> to reset the event log.</p>
+<p><img alt="Placeholder: Event log with mixed message types" src="../img/placeholder-gs-event-log.png" /></p>
+<h2 id="live-telemetry">Live Telemetry</h2>
+<p>The telemetry panel updates automatically when packets are received. It's organized into three sections:</p>
+<h3 id="onboard-computer">Onboard Computer</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Source</th>
+<th>Updated By</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td><code>OBCC</code> or <code>BECN</code></td>
+<td>OBC_CPU command or beacon</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td><code>OBCR</code> or <code>BECN</code></td>
+<td>OBC_RAM command or beacon</td>
+</tr>
+<tr>
+<td>Disk</td>
+<td><code>OBCD</code> or <code>BECN</code></td>
+<td>OBC_DISK command or beacon</td>
+</tr>
+<tr>
+<td>Temp</td>
+<td><code>BME2</code>, <code>TEMP</code>, or <code>BECN</code></td>
+<td>GET_BME, GET_TEMP, or beacon</td>
+</tr>
+</tbody>
+</table>
+<h3 id="power-system">Power System</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Battery</td>
+<td><code>EPSS</code> battery voltage</td>
+</tr>
+<tr>
+<td>EPS Status</td>
+<td><code>EPSS</code> error code (OK or E{code})</td>
+</tr>
+<tr>
+<td>Ch 1–4</td>
+<td><code>EPSS</code> channel states (ON/OFF)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="solar-panels">Solar Panels</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>X-, X+, Y-, Y+</td>
+<td><code>SOLR</code> voltage and current per panel</td>
+</tr>
+<tr>
+<td>Total Power</td>
+<td>Calculated: sum of (V × I / 1000) for all panels</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Placeholder: Live telemetry panels with real data" src="../img/placeholder-gs-telemetry.png" /></p>
+<h2 id="satellite-orientation-3d">Satellite Orientation (3D)</h2>
+<p>The orientation panel shows a Three.js 3D model of the satellite that updates when <code>ADCS</code> or <code>GET_ORIENTATION</code> data is received.</p>
+<ul>
+<li><strong>Roll (X)</strong>: Rotation around the forward axis</li>
+<li><strong>Pitch (Y)</strong>: Rotation around the lateral axis</li>
+<li><strong>Yaw (Z)</strong>: Rotation around the vertical axis (heading)</li>
+</ul>
+<p>Click <strong>"Update"</strong> to request fresh orientation data.</p>
+<p>The 3D model shows:</p>
+<ul>
+<li>Colored cube body (RGB faces for axis identification)</li>
+<li>Solar panels on the X-axis sides</li>
+<li>Antenna on the Y+ axis</li>
+<li>X/Y/Z axis indicators and grid</li>
+</ul>
+<p><img alt="Placeholder: 3D satellite orientation visualization" src="../img/placeholder-gs-3d-orientation.png" /></p>
+<h2 id="classification-banners">Classification Banners</h2>
+<p>Classification banners appear at the top and bottom of the interface. Change the classification level in the <strong>Configure</strong> tab:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Banner Color</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UNCLASSIFIED</td>
+<td>Green</td>
+</tr>
+<tr>
+<td>CUI</td>
+<td>Purple</td>
+</tr>
+<tr>
+<td>SECRET</td>
+<td>Red</td>
+</tr>
+<tr>
+<td>TOP SECRET</td>
+<td>Orange/Yellow</td>
+</tr>
+<tr>
+<td>TOP SECRET//SCI</td>
+<td>Orange/Yellow</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Placeholder: Classification banner examples" src="../img/placeholder-gs-classification.png" /></p>
+<h2 id="soft-reset">Soft Reset</h2>
+<p>The <strong>"Soft Reset"</strong> button sends CTRL-C followed by CTRL-D to the GS Pico MCU, which can reset the serial connection without a full disconnect/reconnect cycle.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../overview/" class="btn btn-neutral float-left" title="Overview"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../packet-parsing/" class="btn btn-neutral float-right" title="Packet Parsing">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>&copy; 2024 ETHOS Labs, LLC</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../overview/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../packet-parsing/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

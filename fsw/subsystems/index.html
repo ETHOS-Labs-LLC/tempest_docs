@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="ETHOS Labs, LLC" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Subsystems - TEMPEST Flight Software</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../overrides/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Subsystems";
+        var mkdocs_page_input_path = "fsw/subsystems.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> TEMPEST Flight Software
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Build Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_components/">TEMPEST Components Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_build_guide/">Building Your CubeSat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to Your Wifi</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Flight Software</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../commands/">Command Protocol</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../telemetry/">Telemetry Reference</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Subsystems</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#environmental-subsystem">Environmental Subsystem</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#on-board-computer-obc">On-Board Computer (OBC)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#payload-camera">Payload Camera</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#solar-panel-monitoring">Solar Panel Monitoring</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#electrical-power-system-eps">Electrical Power System (EPS)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#retransmission">Retransmission</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sensor-mcu/">Sensor MCU (RP2040)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Ground Station</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/interface/">WebSerial Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/packet-parsing/">Packet Parsing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/image-transfer/">Image Transfer</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/radio-config/">Radio Configuration</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/telemetry-ids/">Telemetry ID Quick Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/packet-sizes/">Packet Size Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">TEMPEST Flight Software</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Flight Software</li>
+      <li class="breadcrumb-item active">Subsystems</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="subsystems">Subsystems</h1>
+<h2 id="overview">Overview</h2>
+<p>The FSW interfaces with satellite hardware through dedicated subsystem modules in the <code>subsystems/</code> directory. Each module encapsulates communication with a specific hardware component.</p>
+<pre><code>subsystems/
+├── environmental.py   # RP2040 sensor MCU (UART)
+├── obc.py             # On-board computer functions (psutil)
+├── payload.py         # Camera capture and image handling
+├── solar.py           # INA219 solar panel sensors (I2C)
+├── eps.py             # ATmega328PB EPS (bit-bang UART)
+└── retransmit.py      # Packet retransmission from .chunked files
+</code></pre>
+<h2 id="environmental-subsystem">Environmental Subsystem</h2>
+<p><strong>File:</strong> <code>subsystems/environmental.py</code></p>
+<p>Manages communication with the RP2040 sensor MCU via hardware UART.</p>
+<p><strong>Connection Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Port</td>
+<td><code>/dev/serial0</code></td>
+</tr>
+<tr>
+<td>Baud Rate</td>
+<td>9600</td>
+</tr>
+<tr>
+<td>Timeout</td>
+<td>1 second</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Class: <code>SerialConnection</code></strong></p>
+<p>The <code>send_command()</code> method handles all RP2040 communication:</p>
+<ol>
+<li>Flushes input/output buffers</li>
+<li>Sends command as uppercase string + <code>\n</code></li>
+<li>Waits 50ms for processing</li>
+<li>Reads response with 2-second timeout</li>
+<li>Parses response using <code>ast.literal_eval()</code></li>
+<li>Retries up to 3 times on failure</li>
+</ol>
+<p>Fire-and-forget commands (<code>MORSE</code>, <code>RESET</code>) skip the response wait.</p>
+<p><strong>Data Flow:</strong></p>
+<pre><code>Pi Zero                          RP2040
+  │                                │
+  ├──── &quot;GET_GYRO\n&quot; ────────────►│
+  │                                ├── Read BNO055 sensor
+  │◄──── &quot;[1.23, -0.45, 0.78]\n&quot; ─┤
+  │                                │
+  ├──── ast.literal_eval() ───►  [1.23, -0.45, 0.78]
+</code></pre>
+<p><img alt="Placeholder: UART wiring between Pi Zero and RP2040" src="../img/placeholder-uart-wiring.png" /></p>
+<h2 id="on-board-computer-obc">On-Board Computer (OBC)</h2>
+<p><strong>File:</strong> <code>subsystems/obc.py</code></p>
+<p>Provides system information using <code>psutil</code> and manages image file operations.</p>
+<p><strong>Functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_processes()</code></td>
+<td>string</td>
+<td>Comma-separated list of running process names</td>
+</tr>
+<tr>
+<td><code>get_cpu_usage()</code></td>
+<td>float</td>
+<td>CPU utilization percentage</td>
+</tr>
+<tr>
+<td><code>get_ram_usage()</code></td>
+<td>float</td>
+<td>RAM utilization percentage</td>
+</tr>
+<tr>
+<td><code>get_disk_usage()</code></td>
+<td>float</td>
+<td>Disk utilization percentage</td>
+</tr>
+<tr>
+<td><code>get_hostname()</code></td>
+<td>bytes</td>
+<td>Hostname padded/truncated to 11 bytes</td>
+</tr>
+<tr>
+<td><code>list_files(dir)</code></td>
+<td>string</td>
+<td>Comma-separated file listing. Defaults to <code>capture</code></td>
+</tr>
+<tr>
+<td><code>reboot()</code></td>
+<td>—</td>
+<td>Executes <code>sudo reboot</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Image Processing Pipeline:</strong></p>
+<pre><code>send_image(filename, chunk_size)
+  └── process_all_chunks(filename, chunk_size)
+        ├── base64_encode_chunks()  ← Generator: reads raw file in chunks
+        ├── Format: [base64_data][total:04d][current:04d]
+        ├── Writes .chunked file for retransmission
+        └── Returns list of packet strings
+</code></pre>
+<p><strong>Chunk Sizes by Radio:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Radio</th>
+<th>Raw Chunk</th>
+<th>Base64</th>
+<th>+ Metadata</th>
+<th>Total Payload</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RFM69</td>
+<td>33 bytes</td>
+<td>44 chars</td>
+<td>+ 8 digits</td>
+<td>~52 bytes</td>
+</tr>
+<tr>
+<td>RFM95</td>
+<td>168 bytes</td>
+<td>224 chars</td>
+<td>+ 8 digits</td>
+<td>~232 bytes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="payload-camera">Payload Camera</h2>
+<p><strong>File:</strong> <code>subsystems/payload.py</code></p>
+<p><strong>Class: <code>PayloadCamera</code></strong></p>
+<p>Captures photos using the Raspberry Pi camera module and prepares them for transmission.</p>
+<p><strong>Capture Process:</strong></p>
+<ol>
+<li>Execute <code>rpicam-still -q 40 -o capture/{count}.jpg</code></li>
+<li>Gzip compress the JPEG</li>
+<li>Create <code>.chunked</code> file for transmission</li>
+</ol>
+<p><img alt="Placeholder: Sample captured image in ground station" src="../img/placeholder-image-capture.png" /></p>
+<h2 id="solar-panel-monitoring">Solar Panel Monitoring</h2>
+<p><strong>File:</strong> <code>subsystems/solar.py</code></p>
+<p>Reads voltage and current from four INA219 current sensors on the I2C bus.</p>
+<p><strong>Sensor Mapping:</strong></p>
+<table>
+<thead>
+<tr>
+<th>I2C Address</th>
+<th>Panel</th>
+<th>Physical Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0x40</td>
+<td>X-</td>
+<td>Negative X face</td>
+</tr>
+<tr>
+<td>0x41</td>
+<td>X+</td>
+<td>Positive X face</td>
+</tr>
+<tr>
+<td>0x44</td>
+<td>Y+</td>
+<td>Positive Y face</td>
+</tr>
+<tr>
+<td>0x45</td>
+<td>Y-</td>
+<td>Negative Y face</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Configuration:</strong> 12-bit ADC resolution, 16V bus voltage range.</p>
+<p><strong>Return Format:</strong> 8 float values — <code>[V1, I1, V2, I2, V3, I3, V4, I4]</code></p>
+<p>If a sensor is unavailable, it returns <code>0.000</code> for both voltage and current.</p>
+<p><img alt="Placeholder: Solar panel INA219 sensor wiring" src="../img/placeholder-solar-wiring.png" /></p>
+<h2 id="electrical-power-system-eps">Electrical Power System (EPS)</h2>
+<p><strong>File:</strong> <code>subsystems/eps.py</code></p>
+<p>Communicates with the ATmega328PB EPS controller via bit-banged UART using <code>pigpio</code>.</p>
+<p><strong>Connection Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TX GPIO</td>
+<td>27</td>
+</tr>
+<tr>
+<td>RX GPIO</td>
+<td>22</td>
+</tr>
+<tr>
+<td>Baud Rate</td>
+<td>9600</td>
+</tr>
+<tr>
+<td>Library</td>
+<td>pigpio (software UART)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Protocol:</strong></p>
+<p>Commands are sent as <code>&amp;BMS [COMMAND]\n</code>. Responses are comma-separated values parsed as <code>[int, int, int, int, int, float]</code> representing error code, 4 channel states, and battery voltage.</p>
+<pre><code>Pi Zero                        ATmega328PB
+  │                                │
+  ├── &quot;&amp;BMS STATUS\n&quot; ────────────►│
+  │◄── &quot;0,1,1,0,1,3.72\n&quot; ────────┤
+  │                                │
+  └── Parse: error=0, ch1=ON, ch2=ON, ch3=OFF, ch4=ON, batt=3.72V
+</code></pre>
+<p><strong>Channel Control:</strong></p>
+<pre><code>EPS CH1,1    → Turn channel 1 ON
+EPS CH3,0    → Turn channel 3 OFF
+</code></pre>
+<h2 id="retransmission">Retransmission</h2>
+<p><strong>File:</strong> <code>subsystems/retransmit.py</code></p>
+<p>Reads specific line numbers from <code>.chunked</code> files to support packet retransmission. When the ground station detects missing packets after an image transfer, it sends a <code>RETRANSMIT</code> command with the filename and packet numbers.</p>
+<pre><code>RETRANSMIT 5.jpg.gz.chunked 3 7 15 22
+</code></pre>
+<p>The retransmit module reads lines 3, 7, 15, and 22 from the <code>.chunked</code> file and returns them as individual packets.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../telemetry/" class="btn btn-neutral float-left" title="Telemetry Reference"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../sensor-mcu/" class="btn btn-neutral float-right" title="Sensor MCU (RP2040)">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>&copy; 2024 ETHOS Labs, LLC</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../telemetry/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../sensor-mcu/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

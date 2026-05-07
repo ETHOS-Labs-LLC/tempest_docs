@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="ETHOS Labs, LLC" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Architecture - TEMPEST Flight Software</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../overrides/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Architecture";
+        var mkdocs_page_input_path = "fsw/architecture.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> TEMPEST Flight Software
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Build Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_components/">TEMPEST Components Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_build_guide/">Building Your CubeSat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to Your Wifi</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Flight Software</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Architecture</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#system-diagram">System Diagram</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#main-loop">Main Loop</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#response-types">Response Types</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#health-beacon">Health Beacon</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuration-watchdog">Configuration Watchdog</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#cli-development-mode">CLI Development Mode</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#startup-sequence">Startup Sequence</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../commands/">Command Protocol</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../telemetry/">Telemetry Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../subsystems/">Subsystems</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sensor-mcu/">Sensor MCU (RP2040)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Ground Station</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/interface/">WebSerial Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/packet-parsing/">Packet Parsing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/image-transfer/">Image Transfer</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/radio-config/">Radio Configuration</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/telemetry-ids/">Telemetry ID Quick Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/packet-sizes/">Packet Size Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">TEMPEST Flight Software</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Flight Software</li>
+      <li class="breadcrumb-item active">Architecture</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="flight-software-architecture">Flight Software Architecture</h1>
+<h2 id="overview">Overview</h2>
+<p>The TEMPEST flight software (<code>main.py</code>) runs on a Raspberry Pi Zero and serves as the central command processor for the satellite. It receives commands via radio uplink, processes them through the appropriate subsystem, and returns binary telemetry packets via radio downlink.</p>
+<h2 id="system-diagram">System Diagram</h2>
+<pre><code>                    ┌─────────────────────────────────────────┐
+                    │           Raspberry Pi Zero              │
+                    │                                          │
+  Radio Uplink ───►│  main.py                                 │
+  (RFM69/RFM95)    │    ├── Command Router                   │
+                    │    ├── Beacon Thread                    │
+  Radio Downlink◄──│    ├── Config Watchdog                  │
+  (RFM69/RFM95)    │    │                                    │
+                    │    ├── subsystems/                      │
+                    │    │     ├── environmental.py ──► UART ──► RP2040 MCU
+                    │    │     ├── obc.py (psutil)           │
+                    │    │     ├── payload.py (rpicam)        │
+                    │    │     ├── solar.py ──► I2C ──► INA219 x4
+                    │    │     ├── eps.py ──► GPIO UART ──► ATmega328PB
+                    │    │     └── retransmit.py              │
+                    │    │                                    │
+                    │    └── utils/                           │
+                    │          ├── radio.py (SPI)             │
+                    │          └── display.py (console)       │
+                    └─────────────────────────────────────────┘
+</code></pre>
+<h2 id="main-loop">Main Loop</h2>
+<p>The FSW operates in a continuous receive-process-respond loop:</p>
+<ol>
+<li><strong>Receive</strong>: Wait for a command string on the uplink radio</li>
+<li><strong>Route</strong>: Match the command string to a handler</li>
+<li><strong>Process</strong>: Execute the subsystem function</li>
+<li><strong>Pack</strong>: Encode the response as a binary telemetry packet using <code>struct.pack</code></li>
+<li><strong>Transmit</strong>: Send the packet(s) on the downlink radio</li>
+</ol>
+<pre><code class="language-python">while True:
+    packet = receive_uplink_message(uplink)
+    if packet:
+        command = packet.decode('utf-8').strip()
+        response = process_command(command)
+        send_downlink_message(downlink, response)
+</code></pre>
+<h2 id="response-types">Response Types</h2>
+<p>Commands produce one of several response types:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Single packet</strong></td>
+<td>One binary struct packet</td>
+<td><code>GET_GYRO</code> → 16-byte GYRO packet</td>
+</tr>
+<tr>
+<td><strong>Multi-packet list</strong></td>
+<td>List of binary packets sent sequentially</td>
+<td><code>OBC_PROCESSES</code> → multiple OBCP chunks</td>
+</tr>
+<tr>
+<td><strong>Windowed transfer</strong></td>
+<td>Paced image transfer with delay between packets</td>
+<td><code>SEND_IMAGE</code> → hundreds of SEND packets at 0.25s intervals</td>
+</tr>
+<tr>
+<td><strong>Fire-and-forget</strong></td>
+<td>No response expected</td>
+<td><code>MORSE</code>, <code>RESET_ENV</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="health-beacon">Health Beacon</h2>
+<p>A background thread broadcasts satellite health telemetry at a configurable interval (default 5 seconds). The beacon packet contains:</p>
+<ul>
+<li>Uptime (seconds since boot)</li>
+<li>CPU usage (%)</li>
+<li>RAM usage (%)</li>
+<li>Disk usage (%)</li>
+<li>Temperature (°C)</li>
+</ul>
+<p>The beacon can be enabled/disabled via <code>BEACON_ON [interval]</code> and <code>BEACON_OFF</code> commands.</p>
+<h2 id="configuration-watchdog">Configuration Watchdog</h2>
+<p>The FSW monitors <code>config.yml</code> for changes using the <code>watchdog</code> library. When the file is modified, the radio configuration is reloaded without restarting the service. On startup, <code>config.yml.bak</code> is copied to <code>config.yml</code> to ensure a known-good configuration.</p>
+<h2 id="cli-development-mode">CLI Development Mode</h2>
+<p><code>cli_fsw.py</code> provides a command-line interface version of the FSW for development and testing. It uses <code>input()</code> for command entry instead of radio and returns raw data without <code>struct.pack</code> encoding. This allows testing command handlers without radio hardware.</p>
+<h2 id="startup-sequence">Startup Sequence</h2>
+<ol>
+<li>Restore <code>config.yml</code> from <code>config.yml.bak</code></li>
+<li>Parse configuration</li>
+<li>Initialize radio(s) via <code>setup_radios()</code></li>
+<li>Initialize subsystem connections (serial, I2C, GPIO)</li>
+<li>Perform throwaway <code>POLL</code> to flush stale UART data from RP2040</li>
+<li>Start beacon thread (if configured)</li>
+<li>Start config watchdog thread</li>
+<li>Enter main receive loop</li>
+</ol>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../connecting_to_wifi/" class="btn btn-neutral float-left" title="Connecting to Your Wifi"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../commands/" class="btn btn-neutral float-right" title="Command Protocol">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>&copy; 2024 ETHOS Labs, LLC</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../connecting_to_wifi/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../commands/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

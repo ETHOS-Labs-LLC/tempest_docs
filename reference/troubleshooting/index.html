@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="ETHOS Labs, LLC" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Troubleshooting - TEMPEST Flight Software</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../overrides/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Troubleshooting";
+        var mkdocs_page_input_path = "reference/troubleshooting.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> TEMPEST Flight Software
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Build Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_components/">TEMPEST Components Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_build_guide/">Building Your CubeSat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to Your Wifi</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Flight Software</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/commands/">Command Protocol</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/telemetry/">Telemetry Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/subsystems/">Subsystems</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/sensor-mcu/">Sensor MCU (RP2040)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/configuration/">Configuration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Ground Station</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/interface/">WebSerial Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/packet-parsing/">Packet Parsing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/image-transfer/">Image Transfer</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/radio-config/">Radio Configuration</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../telemetry-ids/">Telemetry ID Quick Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../packet-sizes/">Packet Size Reference</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Troubleshooting</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#radio-issues">Radio Issues</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#assertionerror-on-send">AssertionError on Send</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#no-response-from-satellite">No Response from Satellite</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#missed-packets-during-image-transfer">Missed Packets During Image Transfer</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#browser-issues">Browser Issues</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#webserial-not-available">WebSerial Not Available</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#telemetry-not-updating">Telemetry Not Updating</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#fragmented-packets-in-browser">Fragmented Packets in Browser</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#image-not-displaying-after-transfer">Image Not Displaying After Transfer</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#sensor-issues">Sensor Issues</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#stale-data-on-first-read">Stale Data on First Read</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#environmental-command-returns-none">Environmental Command Returns None</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#solar-readings-all-zero">Solar Readings All Zero</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#eps-issues">EPS Issues</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#eps-command-timeout">EPS Command Timeout</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#service-issues">Service Issues</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#fsw-wont-start">FSW Won't Start</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#config-changes-not-taking-effect">Config Changes Not Taking Effect</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">TEMPEST Flight Software</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Reference</li>
+      <li class="breadcrumb-item active">Troubleshooting</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="troubleshooting">Troubleshooting</h1>
+<h2 id="radio-issues">Radio Issues</h2>
+<h3 id="assertionerror-on-send">AssertionError on Send</h3>
+<p><strong>Symptom:</strong> <code>AssertionError</code> from Adafruit library when transmitting.</p>
+<p><strong>Cause:</strong> Packet exceeds radio FIFO size (66 bytes for RFM69, 252 bytes for RFM95).</p>
+<p><strong>Fix:</strong> Check packet size calculation. The total on-air size is:</p>
+<pre><code>[4-byte Adafruit header] + [your payload] + [1-byte \n from radio.py]
+</code></pre>
+<p>For RFM69, your payload must be &lt;= 61 bytes.</p>
+<h3 id="no-response-from-satellite">No Response from Satellite</h3>
+<p><strong>Symptom:</strong> Commands sent but no telemetry received.</p>
+<p><strong>Possible Causes:</strong></p>
+<ol>
+<li><strong>Radio type mismatch</strong> — GS and satellite must use the same radio type (both RFM69 or both RFM95)</li>
+<li><strong>Frequency mismatch</strong> — Uplink and downlink frequencies must match between GS and satellite</li>
+<li><strong>Satellite not running</strong> — Check <code>systemctl status tempest_fsw</code></li>
+<li><strong>Radio hardware issue</strong> — Check SPI wiring and GPIO connections</li>
+</ol>
+<h3 id="missed-packets-during-image-transfer">Missed Packets During Image Transfer</h3>
+<p><strong>Symptom:</strong> Image transfer completes with missing packets.</p>
+<p><strong>Cause:</strong> RFM69 has higher packet loss at faster TX rates. USB CDC can also drop data under high throughput.</p>
+<p><strong>Fix:</strong></p>
+<ul>
+<li>Increase <code>DEFAULT_TX_DELAY</code> in <code>main.py</code> (default 0.25s)</li>
+<li>Use retransmit: <code>RETRANSMIT filename.chunked pkt1 pkt2 ...</code></li>
+<li>For persistent issues, consider switching to RFM95 (LoRa) for image transfers</li>
+</ul>
+<h2 id="browser-issues">Browser Issues</h2>
+<h3 id="webserial-not-available">WebSerial Not Available</h3>
+<p><strong>Symptom:</strong> "Connect" button doesn't show port selection dialog.</p>
+<p><strong>Cause:</strong> WebSerial API not supported or not in secure context.</p>
+<p><strong>Fix:</strong></p>
+<ul>
+<li>Use Chrome 89+ or Edge 89+</li>
+<li>Must be served over HTTPS or localhost</li>
+<li>Firefox and Safari do not support WebSerial</li>
+</ul>
+<h3 id="telemetry-not-updating">Telemetry Not Updating</h3>
+<p><strong>Symptom:</strong> Event log shows packets arriving but telemetry values stay at <code>--</code>.</p>
+<p><strong>Cause:</strong> Element ID mismatch between HTML and JavaScript.</p>
+<p><strong>Fix:</strong> Verify that the HTML element IDs match what the telemetry unpackers expect:</p>
+<table>
+<thead>
+<tr>
+<th>Element ID</th>
+<th>Updated By</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cpuUsage</code></td>
+<td>OBCC, BECN</td>
+</tr>
+<tr>
+<td><code>ramUsage</code></td>
+<td>OBCR, BECN</td>
+</tr>
+<tr>
+<td><code>diskUsage</code></td>
+<td>OBCD, BECN</td>
+</tr>
+<tr>
+<td><code>temperature</code></td>
+<td>BME2, TEMP, BECN</td>
+</tr>
+<tr>
+<td><code>batteryVoltage</code></td>
+<td>EPSS</td>
+</tr>
+<tr>
+<td><code>epsStatus</code></td>
+<td>EPSS</td>
+</tr>
+<tr>
+<td><code>epsCh1</code>-<code>epsCh4</code></td>
+<td>EPSS</td>
+</tr>
+<tr>
+<td><code>solarXn</code>, <code>solarXp</code>, <code>solarYn</code>, <code>solarYp</code></td>
+<td>SOLR</td>
+</tr>
+<tr>
+<td><code>solarTotal</code></td>
+<td>SOLR</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fragmented-packets-in-browser">Fragmented Packets in Browser</h3>
+<p><strong>Symptom:</strong> Garbled data or partial packet parsing.</p>
+<p><strong>Cause:</strong> USB CDC does not preserve packet boundaries. A single radio packet may arrive as multiple USB reads.</p>
+<p><strong>Fix:</strong> The parser uses newline delimiters (<code>\n</code>) for variable-length packets and waits for complete fixed-size packets. If issues persist, check that <code>radio.py</code> appends <code>b'\n'</code> to every transmission.</p>
+<h3 id="image-not-displaying-after-transfer">Image Not Displaying After Transfer</h3>
+<p><strong>Symptom:</strong> All packets received but image doesn't render.</p>
+<p><strong>Possible Causes:</strong></p>
+<ol>
+<li><strong>Corrupted base64</strong> — Check for non-base64 characters in the data</li>
+<li><strong>Missing gzip header</strong> — Verify the file is actually gzip compressed (header: <code>0x1F 0x8B</code>)</li>
+<li><strong>Chunk ordering</strong> — Base64 padding (<code>==</code>) should only be on the final chunk</li>
+</ol>
+<h2 id="sensor-issues">Sensor Issues</h2>
+<h3 id="stale-data-on-first-read">Stale Data on First Read</h3>
+<p><strong>Symptom:</strong> First sensor command returns incorrect values, subsequent reads are normal.</p>
+<p><strong>Cause:</strong> Stale data in the RP2040 UART buffer from before the FSW started.</p>
+<p><strong>Fix:</strong> The FSW performs a throwaway <code>POLL</code> on startup to flush the buffer. If the issue persists, send any command twice — the second response will be current.</p>
+<h3 id="environmental-command-returns-none">Environmental Command Returns None</h3>
+<p><strong>Symptom:</strong> Sensor command returns no data or times out.</p>
+<p><strong>Possible Causes:</strong></p>
+<ol>
+<li><strong>RP2040 not connected</strong> — Check UART wiring (GP0/GP1 on Pico, TX/RX on Pi Zero)</li>
+<li><strong>Wrong baud rate</strong> — Must be 9600 on both ends</li>
+<li><strong>I2C sensor not detected</strong> — Check BNO055/BMP280 wiring and I2C addresses</li>
+<li><strong>RP2040 crashed</strong> — Send <code>RESET_ENV</code> to soft-reset the MCU</li>
+</ol>
+<h3 id="solar-readings-all-zero">Solar Readings All Zero</h3>
+<p><strong>Symptom:</strong> <code>GET_SOLAR</code> returns 0V 0mA for all panels.</p>
+<p><strong>Cause:</strong> INA219 sensors not detected on I2C bus.</p>
+<p><strong>Fix:</strong> Verify I2C addresses (0x40, 0x41, 0x44, 0x45) and wiring. Run <code>i2cdetect -y 1</code> on the Pi Zero to scan the bus.</p>
+<h2 id="eps-issues">EPS Issues</h2>
+<h3 id="eps-command-timeout">EPS Command Timeout</h3>
+<p><strong>Symptom:</strong> EPS commands hang or return no data.</p>
+<p><strong>Cause:</strong> Bit-banged UART communication failure with ATmega328PB.</p>
+<p><strong>Fix:</strong></p>
+<ol>
+<li>Verify <code>pigpiod</code> is running: <code>systemctl status pigpiod</code></li>
+<li>Check GPIO wiring: TX=GPIO27, RX=GPIO22</li>
+<li>Verify ATmega328PB is powered and running</li>
+</ol>
+<h2 id="service-issues">Service Issues</h2>
+<h3 id="fsw-wont-start">FSW Won't Start</h3>
+<p><strong>Symptom:</strong> <code>systemctl status tempest_fsw</code> shows failure.</p>
+<p><strong>Common Causes:</strong></p>
+<ol>
+<li><strong>pigpiod not running</strong> — FSW depends on it for EPS communication</li>
+<li><strong>Missing Python packages</strong> — Run <code>install.sh</code> again</li>
+<li><strong>Corrupted config.yml</strong> — Delete it and let startup restore from <code>.bak</code></li>
+<li><strong>Hardware not connected</strong> — Radio SPI initialization may fail</li>
+</ol>
+<h3 id="config-changes-not-taking-effect">Config Changes Not Taking Effect</h3>
+<p><strong>Symptom:</strong> Editing <code>config.yml</code> doesn't change behavior.</p>
+<p><strong>Fix:</strong> The watchdog monitors for file modifications. Verify:</p>
+<ol>
+<li>You edited <code>config.yml</code>, not <code>config.yml.bak</code></li>
+<li>The watchdog thread is running (check FSW logs)</li>
+<li>Note: On reboot, <code>.bak</code> overwrites <code>.yml</code>, so persistent changes need to go in both files</li>
+</ol>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../packet-sizes/" class="btn btn-neutral float-left" title="Packet Size Reference"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>&copy; 2024 ETHOS Labs, LLC</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../packet-sizes/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

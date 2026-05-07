@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="ETHOS Labs, LLC" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Overview - TEMPEST Flight Software</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../overrides/custom.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Overview";
+        var mkdocs_page_input_path = "ground-station/overview.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> TEMPEST Flight Software
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Build Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_components/">TEMPEST Components Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_build_guide/">Building Your CubeSat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to Your Wifi</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Flight Software</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/commands/">Command Protocol</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/telemetry/">Telemetry Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/subsystems/">Subsystems</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/sensor-mcu/">Sensor MCU (RP2040)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/configuration/">Configuration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Ground Station</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Overview</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#architecture">Architecture</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#design-system">Design System</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#interface-layout">Interface Layout</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#left-column-connection-and-radio-configuration">Left Column — Connection and Radio Configuration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#middle-column-event-log-and-live-telemetry">Middle Column — Event Log and Live Telemetry</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#right-column-command-and-orientation">Right Column — Command and Orientation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#global-status-bar-gsb">Global Status Bar (GSB)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configure-tab">Configure Tab</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#browser-requirements">Browser Requirements</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#file-structure">File Structure</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../interface/">WebSerial Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../packet-parsing/">Packet Parsing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../image-transfer/">Image Transfer</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../radio-config/">Radio Configuration</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/telemetry-ids/">Telemetry ID Quick Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/packet-sizes/">Packet Size Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">TEMPEST Flight Software</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Ground Station</li>
+      <li class="breadcrumb-item active">Overview</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="ground-station-overview">Ground Station Overview</h1>
+<h2 id="architecture">Architecture</h2>
+<p>The TEMPEST ground station uses a browser-based interface that communicates with the satellite through a Pico MCU radio relay.</p>
+<pre><code>┌──────────────┐    USB CDC     ┌──────────────┐    RF Link    ┌──────────────┐
+│   Browser    │◄──(WebSerial)──►│  GS Pico MCU │◄──(RFM69/95)──►│  Satellite   │
+│  (Chrome)    │                │  (Radio HW)  │               │  (Pi Zero)   │
+└──────────────┘                └──────────────┘               └──────────────┘
+</code></pre>
+<p><strong>Browser</strong> (FSC-GS): Runs entirely client-side. No server backend required. Uses the WebSerial API (Chrome/Edge) to communicate with the GS Pico MCU via USB CDC serial.</p>
+<p><strong>GS Pico MCU</strong>: Bridges USB serial to radio. Forwards commands from browser to satellite via radio uplink and relays telemetry from satellite to browser via radio downlink.</p>
+<h2 id="design-system">Design System</h2>
+<p>The ground station interface follows the <strong>Astro UXDS</strong> (US Space Force) design system:</p>
+<ul>
+<li>Dark theme with space operations color palette</li>
+<li>Global Status Bar (GSB) with app metadata, tabs, monitors, and UTC clock</li>
+<li>Classification banners (UNCLASSIFIED through TOP SECRET//SCI)</li>
+<li>Status symbols for connection monitoring</li>
+<li>Roboto / Roboto Mono typography</li>
+</ul>
+<p><img alt="Placeholder: Ground station full interface screenshot" src="../img/placeholder-gs-full-interface.png" /></p>
+<h2 id="interface-layout">Interface Layout</h2>
+<p>The Operate tab uses a three-column layout:</p>
+<h3 id="left-column-connection-and-radio-configuration">Left Column — Connection and Radio Configuration</h3>
+<ul>
+<li>Serial connection status and controls</li>
+<li>Radio uplink/downlink configuration (type, frequency, band, node addresses)</li>
+<li>TX/RX LED indicators</li>
+<li>Settings button (switches to Configure tab)</li>
+</ul>
+<p><img alt="Placeholder: Left column - connection and radio panels" src="../img/placeholder-gs-left-column.png" /></p>
+<h3 id="middle-column-event-log-and-live-telemetry">Middle Column — Event Log and Live Telemetry</h3>
+<ul>
+<li><strong>Event Log</strong>: Scrollable terminal showing timestamped command/response traffic</li>
+<li><strong>Live Telemetry</strong>: Three sections updated by incoming packets:<ul>
+<li><strong>Onboard Computer</strong>: CPU, RAM, Disk, Temperature</li>
+<li><strong>Power System</strong>: Battery voltage, EPS status, 4 channel states</li>
+<li><strong>Solar Panels</strong>: X-, X+, Y-, Y+ voltage/current, total power</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Placeholder: Middle column - event log and telemetry panels" src="../img/placeholder-gs-middle-column.png" /></p>
+<h3 id="right-column-command-and-orientation">Right Column — Command and Orientation</h3>
+<ul>
+<li><strong>Command Center</strong>: Text input, quick command buttons, help reference</li>
+<li><strong>Image Management</strong>: Active images, buffer controls, manual retransmit</li>
+<li><strong>Satellite Orientation</strong>: 3D Three.js visualization with Roll/Pitch/Yaw readout</li>
+</ul>
+<p><img alt="Placeholder: Right column - command center and 3D orientation" src="../img/placeholder-gs-right-column.png" /></p>
+<h2 id="global-status-bar-gsb">Global Status Bar (GSB)</h2>
+<p>The GSB spans the top of the interface and contains:</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>App Icon</td>
+<td>Globe SVG icon</td>
+</tr>
+<tr>
+<td>App Meta</td>
+<td>"ETHOS Labs" domain + "TEMPEST Ground Station" name</td>
+</tr>
+<tr>
+<td>Version</td>
+<td>v2.0</td>
+</tr>
+<tr>
+<td>Tabs</td>
+<td>Operate / Configure</td>
+</tr>
+<tr>
+<td>Serial Monitor</td>
+<td>Connection status (On/Off) with status symbol</td>
+</tr>
+<tr>
+<td>Uplink Monitor</td>
+<td>TX activity flash</td>
+</tr>
+<tr>
+<td>Downlink Monitor</td>
+<td>RX activity flash</td>
+</tr>
+<tr>
+<td>UTC Clock</td>
+<td>HH:MM:SS time and YYYY-MM-DD date</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Placeholder: Global Status Bar close-up" src="../img/placeholder-gsb-closeup.png" /></p>
+<h2 id="configure-tab">Configure Tab</h2>
+<p>The Configure tab provides settings panels:</p>
+<ul>
+<li><strong>Serial Port</strong>: Baud rate, data bits, stop bits, parity, flow control</li>
+<li><strong>Classification</strong>: Display classification level selector</li>
+<li><strong>About</strong>: Application info, version, organization</li>
+</ul>
+<h2 id="browser-requirements">Browser Requirements</h2>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Browser</td>
+<td>Chrome 89+ or Edge 89+</td>
+</tr>
+<tr>
+<td>API</td>
+<td>WebSerial API</td>
+</tr>
+<tr>
+<td>Connection</td>
+<td>USB to GS Pico MCU</td>
+</tr>
+<tr>
+<td>HTTPS</td>
+<td>Required for WebSerial (or localhost)</td>
+</tr>
+</tbody>
+</table>
+<p>The live deployment is available at <a href="https://fsc-gs.ethoslabs.space">fsc-gs.ethoslabs.space</a>.</p>
+<h2 id="file-structure">File Structure</h2>
+<pre><code>FSC-GS/
+├── index.html                    # Main HTML (Astro UXDS layout)
+├── styles.css                    # Astro UXDS token system and styles
+└── scripts/
+    ├── main.js                   # UI logic, tabs, clock, classification
+    ├── telemetry.js              # Binary packet unpacking
+    ├── serial-communication.js   # WebSerial connection and data routing
+    ├── image-processing.js       # Image reception and reconstruction
+    └── 3d-visualization.js       # Three.js satellite orientation
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../fsw/installation/" class="btn btn-neutral float-left" title="Installation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../interface/" class="btn btn-neutral float-right" title="WebSerial Interface">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>&copy; 2024 ETHOS Labs, LLC</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../fsw/installation/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../interface/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
