@@ -1,6 +1,7 @@
-site_name: 'ETHOS Labs - Tempest Documentation'
-copyright: © 2024, ETHOS Labs, LLC  - Please Do Not Redistribute
-site_author: Tim Fowler
+site_name: TEMPEST Flight Software
+site_description: Documentation for the TEMPEST CubeSat Flight Software and Ground Station
+site_author: ETHOS Labs, LLC
+copyright: "&copy; 2024 ETHOS Labs, LLC"
 
 theme:
   name: readthedocs
@@ -12,6 +13,24 @@ nav:
     - Building Your CubeSat: tempest_build_guide.md
   - Setup:
     - Connecting to Your Wifi: connecting_to_wifi.md
+  - Flight Software:
+    - Architecture: fsw/architecture.md
+    - Command Protocol: fsw/commands.md
+    - Telemetry Reference: fsw/telemetry.md
+    - Subsystems: fsw/subsystems.md
+    - Sensor MCU (RP2040): fsw/sensor-mcu.md
+    - Configuration: fsw/configuration.md
+    - Installation: fsw/installation.md
+  - Ground Station:
+    - Overview: ground-station/overview.md
+    - WebSerial Interface: ground-station/interface.md
+    - Packet Parsing: ground-station/packet-parsing.md
+    - Image Transfer: ground-station/image-transfer.md
+    - Radio Configuration: ground-station/radio-config.md
+  - Reference:
+    - Telemetry ID Quick Reference: reference/telemetry-ids.md
+    - Packet Size Reference: reference/packet-sizes.md
+    - Troubleshooting: reference/troubleshooting.md
 
 extra_css:
   - overrides/custom.css
