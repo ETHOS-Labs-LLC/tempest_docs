@@ -83,7 +83,7 @@
     </li>
     </ul>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../connecting_to_wifi/">Connecting to TEMPEST</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../tempest_setup/">TEMPEST Setup</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Flight Software</span></p>
@@ -201,7 +201,7 @@ integer is multiplied by 10 (<code>TEMPEST-1</code> → node 10, <code>TEMPEST-2
 <hr />
 <h2 id="1-set-the-hostname">1. Set the Hostname</h2>
 <h3 id="option-a-during-imaging-recommended">Option A — during imaging (recommended)</h3>
-<p>Follow <a href="../connecting_to_wifi/#imaging-a-fresh-microsd-card">Connecting to Your TEMPEST CubeSat</a>
+<p>Follow <a href="connecting_to_wifi.md#imaging-a-fresh-microsd-card">Connecting to Your TEMPEST CubeSat</a>
 and, at the <strong><code>EDIT SETTINGS</code></strong> step, set:</p>
 <ul>
 <li><strong>Hostname</strong>: <code>TEMPEST-0</code></li>
@@ -209,7 +209,7 @@ and, at the <strong><code>EDIT SETTINGS</code></strong> step, set:</p>
 <p>The AP SSID is derived from the hostname, so the unit will broadcast
 <code>TEMPEST-0</code> on first boot.</p>
 <h3 id="option-b-on-a-running-unit">Option B — on a running unit</h3>
-<p>SSH in (see <a href="../connecting_to_wifi/#connecting-from-your-laptop">Connecting from Your Laptop</a>),
+<p>SSH in (see <a href="connecting_to_wifi.md#connecting-from-your-laptop">Connecting from Your Laptop</a>),
 then:</p>
 <pre><code class="language-bash">sudo hostnamectl set-hostname TEMPEST-0
 sudo reboot
@@ -467,7 +467,7 @@ keep the ground station at <code>255</code>.</p>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../tempest_build_guide/" class="btn btn-neutral float-left" title="Building Your CubeSat"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../connecting_to_wifi/" class="btn btn-neutral float-right" title="Connecting to TEMPEST">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../tempest_setup/" class="btn btn-neutral float-right" title="TEMPEST Setup">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -494,7 +494,7 @@ keep the ground station at <code>255</code>.</p>
       <span><a href="../tempest_build_guide/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../connecting_to_wifi/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../tempest_setup/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
