@@ -1,5 +1,7 @@
 # Ground Station Overview
 
+![alt text](image.png)
+
 ## Architecture
 
 The TEMPEST ground station uses a browser-based interface that communicates with the satellite through a Pico MCU radio relay.
@@ -11,7 +13,7 @@ The TEMPEST ground station uses a browser-based interface that communicates with
 └──────────────┘                └──────────────┘               └──────────────┘
 ```
 
-**Browser** (FSC-GS): Runs entirely client-side. No server backend required. Uses the WebSerial API (Chrome/Edge) to communicate with the GS Pico MCU via USB CDC serial.
+**Browser** (GS): Runs entirely client-side. No server backend required. Uses the WebSerial API (Chrome/Edge) to communicate with the GS Pico MCU via USB CDC serial.
 
 **GS Pico MCU**: Bridges USB serial to radio. Forwards commands from browser to satellite via radio uplink and relays telemetry from satellite to browser via radio downlink.
 
@@ -25,7 +27,7 @@ The ground station interface follows the **Astro UXDS** (US Space Force) design 
 - Status symbols for connection monitoring
 - Roboto / Roboto Mono typography
 
-![Placeholder: Ground station full interface screenshot](../img/placeholder-gs-full-interface.png)
+![Ground station full interface screenshot](image.png)
 
 ## Interface Layout
 
@@ -38,7 +40,7 @@ The Operate tab uses a three-column layout:
 - TX/RX LED indicators
 - Settings button (switches to Configure tab)
 
-![Placeholder: Left column - connection and radio panels](../img/placeholder-gs-left-column.png)
+![Left column - connection and radio panels](image-1.png)
 
 ### Middle Column — Event Log and Live Telemetry
 
@@ -48,7 +50,7 @@ The Operate tab uses a three-column layout:
     - **Power System**: Battery voltage, EPS status, 4 channel states
     - **Solar Panels**: X-, X+, Y-, Y+ voltage/current, total power
 
-![Placeholder: Middle column - event log and telemetry panels](../img/placeholder-gs-middle-column.png)
+![Placeholder: Middle column - event log and telemetry panels](image-2.png)
 
 ### Right Column — Command and Orientation
 
@@ -56,7 +58,7 @@ The Operate tab uses a three-column layout:
 - **Image Management**: Active images, buffer controls, manual retransmit
 - **Satellite Orientation**: 3D Three.js visualization with Roll/Pitch/Yaw readout
 
-![Placeholder: Right column - command center and 3D orientation](../img/placeholder-gs-right-column.png)
+![Right column - command center and 3D orientation](image-3.png)
 
 ## Global Status Bar (GSB)
 
@@ -73,7 +75,7 @@ The GSB spans the top of the interface and contains:
 | Downlink Monitor | RX activity flash |
 | UTC Clock | HH:MM:SS time and YYYY-MM-DD date |
 
-![Placeholder: Global Status Bar close-up](../img/placeholder-gsb-closeup.png)
+![Placeholder: Global Status Bar close-up](image-4.png)
 
 ## Configure Tab
 
@@ -94,16 +96,3 @@ The Configure tab provides settings panels:
 
 The live deployment is available at [gs.ethoslabs.space](https://gs.ethoslabs.space).
 
-## File Structure
-
-```
-FSC-GS/
-├── index.html                    # Main HTML (Astro UXDS layout)
-├── styles.css                    # Astro UXDS token system and styles
-└── scripts/
-    ├── main.js                   # UI logic, tabs, clock, classification
-    ├── telemetry.js              # Binary packet unpacking
-    ├── serial-communication.js   # WebSerial connection and data routing
-    ├── image-processing.js       # Image reception and reconstruction
-    └── 3d-visualization.js       # Three.js satellite orientation
-```
