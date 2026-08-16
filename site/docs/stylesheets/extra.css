@@ -1,0 +1,37 @@
+/* Global cap so oversized screenshots render at the content width
+   instead of native pixels. Keeps font sizes across screenshots
+   visually consistent. */
+.rst-content img {
+  max-width: 900px;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 1em auto;
+  border: 1px solid #e1e4e5;
+  border-radius: 4px;
+}
+
+/* Per-image overrides via attr_list, e.g.
+   ![alt](foo.png){ .small }
+   ![alt](foo.png){ .wide }
+   ![alt](foo.png){ .bare }   -- no frame, e.g. logos/diagrams */
+.rst-content img.small { max-width: 300px; }
+.rst-content img.medium { max-width: 600px; }
+.rst-content img.wide { max-width: 1200px; }
+.rst-content img.bare { border: none; }
+
+/* Figure + caption. Requires md_in_html markdown extension:
+   <figure markdown>
+     ![alt](foo.png){ .medium }
+     <figcaption>Caption text.</figcaption>
+   </figure> */
+.rst-content figure {
+  text-align: center;
+  margin: 1.5em auto;
+}
+.rst-content figcaption {
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 0.5em;
+  font-style: italic;
+}

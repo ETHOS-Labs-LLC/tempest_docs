@@ -6,13 +6,16 @@
 
 Navigate to the ground station URL in Chrome or Edge. The interface loads with all controls disabled until a serial connection is established.
 
-![Placeholder: Initial disconnected state](../img/placeholder-gs-disconnected.png)
+![Initial disconnected state](image-5.png)
 
 ### Step 2: Connect
 
 1. Click **"Connect to Ground Station"**
 2. A browser dialog appears listing available serial ports
 3. Select the GS Pico MCU USB port
+
+![Serial Port Selection](image-6.png)
+
 4. The connection establishes with default serial parameters:
 
 | Parameter | Default |
@@ -30,7 +33,7 @@ Upon successful connection:
 - Command input and buttons become enabled
 - The event log shows "Connected to serial port"
 
-![Placeholder: Connected state with green indicators](../img/placeholder-gs-connected.png)
+![Successful Connection to Serial Port](image-7.png)
 
 ### Step 3: Configure Radios (if needed)
 
@@ -43,7 +46,9 @@ The Radio Configuration panel lets you set uplink and downlink parameters indepe
 
 Click **"Apply Configuration"** to send configuration commands to the GS Pico MCU.
 
-![Placeholder: Radio configuration panel](../img/placeholder-gs-radio-config.png)
+![Radio configuration panel](image-8.png)
+
+![Event Log Showing Radio Configuration](image-9.png)
 
 ## Sending Commands
 
@@ -73,7 +78,9 @@ Preset buttons send common commands with a single click:
 
 ### All Commands Reference
 
-Click **"All Commands"** to display the full command list in the event log. See [Command Protocol](../fsw/commands.md) for detailed documentation.
+Click **"All Commands"** to display the full command list in the event log. See [Command Protocol](image-10.png) detailed documentation.
+
+![All Commands Output in Event Log](image-11.png)
 
 ## Event Log
 
@@ -88,8 +95,6 @@ The event log (terminal) displays all communication with timestamps:
 | `error` | Red | Connection errors, parse failures |
 
 Click **"Clear"** to reset the event log.
-
-![Placeholder: Event log with mixed message types](../img/placeholder-gs-event-log.png)
 
 ## Live Telemetry
 
