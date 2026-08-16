@@ -165,12 +165,15 @@
 <h2 id="connecting-to-the-ground-station">Connecting to the Ground Station</h2>
 <h3 id="step-1-open-the-interface">Step 1: Open the Interface</h3>
 <p>Navigate to the ground station URL in Chrome or Edge. The interface loads with all controls disabled until a serial connection is established.</p>
-<p><img alt="Placeholder: Initial disconnected state" src="../img/placeholder-gs-disconnected.png" /></p>
+<p><img alt="Initial disconnected state" src="../image-5.png" /></p>
 <h3 id="step-2-connect">Step 2: Connect</h3>
 <ol>
 <li>Click <strong>"Connect to Ground Station"</strong></li>
 <li>A browser dialog appears listing available serial ports</li>
 <li>Select the GS Pico MCU USB port</li>
+</ol>
+<p><img alt="Serial Port Selection" src="../image-6.png" /></p>
+<ol>
 <li>The connection establishes with default serial parameters:</li>
 </ol>
 <table>
@@ -210,7 +213,7 @@
 <li>Command input and buttons become enabled</li>
 <li>The event log shows "Connected to serial port"</li>
 </ul>
-<p><img alt="Placeholder: Connected state with green indicators" src="../img/placeholder-gs-connected.png" /></p>
+<p><img alt="Successful Connection to Serial Port" src="../image-7.png" /></p>
 <h3 id="step-3-configure-radios-if-needed">Step 3: Configure Radios (if needed)</h3>
 <p>The Radio Configuration panel lets you set uplink and downlink parameters independently:</p>
 <ul>
@@ -220,7 +223,8 @@
 <li><strong>Node Address</strong>: Satellite node (uplink) / Ground node (downlink)</li>
 </ul>
 <p>Click <strong>"Apply Configuration"</strong> to send configuration commands to the GS Pico MCU.</p>
-<p><img alt="Placeholder: Radio configuration panel" src="../img/placeholder-gs-radio-config.png" /></p>
+<p><img alt="Radio configuration panel" src="../image-8.png" /></p>
+<p><img alt="Event Log Showing Radio Configuration" src="../image-9.png" /></p>
 <h2 id="sending-commands">Sending Commands</h2>
 <h3 id="text-input">Text Input</h3>
 <p>Type any command in the command input field and press Enter or click <strong>"Send Command"</strong>. The command is sent to the GS Pico MCU which forwards it via radio.</p>
@@ -289,7 +293,8 @@
 </tbody>
 </table>
 <h3 id="all-commands-reference">All Commands Reference</h3>
-<p>Click <strong>"All Commands"</strong> to display the full command list in the event log. See <a href="../../fsw/commands/">Command Protocol</a> for detailed documentation.</p>
+<p>Click <strong>"All Commands"</strong> to display the full command list in the event log. See <a href="../image-10.png">Command Protocol</a> detailed documentation.</p>
+<p><img alt="All Commands Output in Event Log" src="../image-11.png" /></p>
 <h2 id="event-log">Event Log</h2>
 <p>The event log (terminal) displays all communication with timestamps:</p>
 <table>
@@ -329,7 +334,6 @@
 </tbody>
 </table>
 <p>Click <strong>"Clear"</strong> to reset the event log.</p>
-<p><img alt="Placeholder: Event log with mixed message types" src="../img/placeholder-gs-event-log.png" /></p>
 <h2 id="live-telemetry">Live Telemetry</h2>
 <p>The telemetry panel updates automatically when packets are received. It's organized into three sections:</p>
 <h3 id="onboard-computer">Onboard Computer</h3>

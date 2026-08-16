@@ -159,6 +159,9 @@ Classification banners appear at the top and bottom of the interface. Change the
 
 ![Placeholder: Classification banner examples](../img/placeholder-gs-classification.png)
 
+!! Note
+    This is eye candy and should not be taken as a real classification. 
+
 ## Soft Reset
 
 The **"Soft Reset"** button sends CTRL-C followed by CTRL-D to the GS Pico MCU, which can reset the serial connection without a full disconnect/reconnect cycle.
