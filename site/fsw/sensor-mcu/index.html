@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="ETHOS Labs, LLC" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Sensor MCU (RP2040) - TEMPEST Flight Software</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Sensor MCU (RP2040)";
+        var mkdocs_page_input_path = "fsw/sensor-mcu.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> TEMPEST Flight Software
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Build Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_components/">TEMPEST Components Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_build_guide/">Building Your CubeSat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Quick Start: TEMPEST-0 on RFM69</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to TEMPEST</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Flight Software</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../commands/">Command Protocol</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../telemetry/">Telemetry Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../subsystems/">Subsystems</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Sensor MCU (RP2040)</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#hardware-connections">Hardware Connections</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#i2c-bus">I2C Bus</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#uart">UART</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#buzzer">Buzzer</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#command-protocol">Command Protocol</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#sensor-commands">Sensor Commands</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#system-commands">System Commands</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#response-parsing">Response Parsing</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#morse-code">Morse Code</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#bno055-sensor-modes">BNO055 Sensor Modes</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#first-read-behavior">First-Read Behavior</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Ground Station</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/interface/">WebSerial Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/packet-parsing/">Packet Parsing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/image-transfer/">Image Transfer</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/radio-config/">Radio Configuration</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/telemetry-ids/">Telemetry ID Quick Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/packet-sizes/">Packet Size Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">TEMPEST Flight Software</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Flight Software</li>
+      <li class="breadcrumb-item active">Sensor MCU (RP2040)</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="sensor-mcu-rp2040">Sensor MCU (RP2040)</h1>
+<h2 id="overview">Overview</h2>
+<p>The RP2040 Pico runs CircuitPython firmware (<code>code.py</code>) and serves as the environmental sensor interface. It communicates with the Pi Zero FSW over UART and manages:</p>
+<ul>
+<li>BNO055 9-DOF IMU (accelerometer, gyroscope, magnetometer)</li>
+<li>BMP280 barometric pressure / temperature / altitude sensor</li>
+<li>Piezo buzzer for morse code output</li>
+</ul>
+<p><img alt="Placeholder: RP2040 Pico with BNO055 and BMP280 connected" src="../img/placeholder-rp2040-sensors.png" /></p>
+<h2 id="hardware-connections">Hardware Connections</h2>
+<h3 id="i2c-bus">I2C Bus</h3>
+<table>
+<thead>
+<tr>
+<th>Pin</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GP27</td>
+<td>SCL</td>
+</tr>
+<tr>
+<td>GP26</td>
+<td>SDA</td>
+</tr>
+</tbody>
+</table>
+<p><strong>I2C Devices:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Device</th>
+<th>Address</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BNO055</td>
+<td>0x28 (default)</td>
+<td>9-DOF IMU</td>
+</tr>
+<tr>
+<td>BMP280</td>
+<td>0x76</td>
+<td>Pressure, temperature, altitude</td>
+</tr>
+</tbody>
+</table>
+<h3 id="uart">UART</h3>
+<table>
+<thead>
+<tr>
+<th>Pin</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GP0</td>
+<td>RX (from Pi Zero TX)</td>
+</tr>
+<tr>
+<td>GP1</td>
+<td>TX (to Pi Zero RX)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>UART Parameters:</strong> 9600 baud, 8N1</p>
+<h3 id="buzzer">Buzzer</h3>
+<table>
+<thead>
+<tr>
+<th>Pin</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GP15</td>
+<td>Digital output to piezo buzzer</td>
+</tr>
+</tbody>
+</table>
+<h2 id="command-protocol">Command Protocol</h2>
+<p>The RP2040 receives commands as uppercase ASCII strings terminated with <code>\n</code>. Responses are Python list literals terminated with <code>\n</code>.</p>
+<h3 id="sensor-commands">Sensor Commands</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Response Format</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET_GYRO</code></td>
+<td><code>[x, y, z]</code></td>
+<td>Gyroscope (°/s)</td>
+</tr>
+<tr>
+<td><code>GET_ACCEL</code></td>
+<td><code>[x, y, z]</code></td>
+<td>Accelerometer (m/s²)</td>
+</tr>
+<tr>
+<td><code>GET_MAG</code></td>
+<td><code>[x, y, z]</code></td>
+<td>Magnetometer (µT)</td>
+</tr>
+<tr>
+<td><code>GET_GRAVITY</code></td>
+<td><code>[x, y, z]</code></td>
+<td>Gravity vector (m/s²)</td>
+</tr>
+<tr>
+<td><code>GET_EULER</code></td>
+<td><code>[yaw, roll, pitch]</code></td>
+<td>Euler angles (°)</td>
+</tr>
+<tr>
+<td><code>GET_QUATERNION</code></td>
+<td><code>[w, x, y, z]</code></td>
+<td>Quaternion orientation</td>
+</tr>
+<tr>
+<td><code>GET_BME</code></td>
+<td><code>[temp, pressure, altitude]</code></td>
+<td>BME280 readings</td>
+</tr>
+<tr>
+<td><code>GET_TEMP</code></td>
+<td><code>[temp]</code></td>
+<td>BNO055 die temperature (°C)</td>
+</tr>
+<tr>
+<td><code>POLL</code></td>
+<td><code>[16 float values]</code></td>
+<td>All sensor data concatenated</td>
+</tr>
+</tbody>
+</table>
+<h3 id="system-commands">System Commands</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Response</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MORSE &lt;message&gt;</code></td>
+<td><code>OK</code></td>
+<td>Play morse code on buzzer</td>
+</tr>
+<tr>
+<td><code>RESET</code></td>
+<td>—</td>
+<td>Soft reset MCU (<code>microcontroller.reset()</code>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="response-parsing">Response Parsing</h2>
+<p>The Pi Zero FSW parses RP2040 responses using <code>ast.literal_eval()</code>:</p>
+<pre><code class="language-python"># RP2040 sends: [1.23, -0.45, 0.78]\n
+# Pi Zero receives and parses:
+response = ast.literal_eval(&quot;[1.23, -0.45, 0.78]&quot;)
+# result: [1.23, -0.45, 0.78] (Python list of floats)
+</code></pre>
+<p>This approach safely evaluates Python literals without executing arbitrary code.</p>
+<h2 id="morse-code">Morse Code</h2>
+<p>The buzzer on GP15 supports morse code playback with the following timing:</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dot</td>
+<td>0.1s</td>
+</tr>
+<tr>
+<td>Dash</td>
+<td>0.3s</td>
+</tr>
+<tr>
+<td>Symbol space</td>
+<td>0.1s</td>
+</tr>
+<tr>
+<td>Letter space</td>
+<td>0.3s</td>
+</tr>
+<tr>
+<td>Word space</td>
+<td>0.7s</td>
+</tr>
+</tbody>
+</table>
+<p>On boot, the MCU plays "Tempest" in morse code as a startup indicator.</p>
+<h2 id="bno055-sensor-modes">BNO055 Sensor Modes</h2>
+<p>The BNO055 provides multiple data types from its integrated sensors:</p>
+<table>
+<thead>
+<tr>
+<th>Data Type</th>
+<th>Source</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gyroscope</td>
+<td>Angular rate sensor</td>
+<td>X, Y, Z rotation rates</td>
+</tr>
+<tr>
+<td>Accelerometer</td>
+<td>Linear acceleration sensor</td>
+<td>X, Y, Z acceleration</td>
+</tr>
+<tr>
+<td>Magnetometer</td>
+<td>Geomagnetic sensor</td>
+<td>X, Y, Z field strength</td>
+</tr>
+<tr>
+<td>Gravity</td>
+<td>Sensor fusion</td>
+<td>X, Y, Z gravity components</td>
+</tr>
+<tr>
+<td>Euler</td>
+<td>Sensor fusion</td>
+<td>Heading, Roll, Pitch</td>
+</tr>
+<tr>
+<td>Quaternion</td>
+<td>Sensor fusion</td>
+<td>W, X, Y, Z</td>
+</tr>
+<tr>
+<td>Temperature</td>
+<td>On-die sensor</td>
+<td>Integer °C</td>
+</tr>
+</tbody>
+</table>
+<h2 id="first-read-behavior">First-Read Behavior</h2>
+<p>The first sensor read after MCU startup may return stale data from the UART buffer. The FSW performs a throwaway <code>POLL</code> command during initialization to flush this stale data. Subsequent reads return current values.</p>
+<p><img alt="Placeholder: RP2040 wiring diagram" src="../img/placeholder-rp2040-wiring.png" /></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../subsystems/" class="btn btn-neutral float-left" title="Subsystems"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../configuration/" class="btn btn-neutral float-right" title="Configuration">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>&copy; 2024 ETHOS Labs, LLC</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../subsystems/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../configuration/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

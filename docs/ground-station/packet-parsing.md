@@ -54,7 +54,7 @@ const packetSizes = {
     'GYRO': 16, 'ACCL': 16, 'MAGN': 16, 'GRAV': 16, 'EULR': 16,
     'BME2': 16, 'TEMP': 8,  'QUAT': 20,
     'OBCR': 8,  'OBCD': 8,  'OBCC': 8,
-    'ADCS': 32, 'EPSS': 28, 'HOST': 15, 'SOLR': 36,
+    'ADCS': 32, 'EPSS': 28, 'HOST': 15, 'WIFI': 51, 'SOLR': 36,
     'XFRC': 8,  'BECN': 24
 };
 ```

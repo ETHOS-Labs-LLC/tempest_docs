@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="ETHOS Labs, LLC" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Installation - TEMPEST Flight Software</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Installation";
+        var mkdocs_page_input_path = "fsw/installation.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> TEMPEST Flight Software
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Build Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_components/">TEMPEST Components Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_build_guide/">Building Your CubeSat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Quick Start: TEMPEST-0 on RFM69</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to TEMPEST</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Flight Software</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../commands/">Command Protocol</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../telemetry/">Telemetry Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../subsystems/">Subsystems</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sensor-mcu/">Sensor MCU (RP2040)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Installation</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#quick-install">Quick Install</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-system-update">1. System Update</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-python-dependencies">2. Python Dependencies</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-hardware-interface-configuration">3. Hardware Interface Configuration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#4-pigpiod-service">4. pigpiod Service</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#5-wifi-access-point">5. WiFi Access Point</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#ssid-sync-to-hostname">SSID Sync to Hostname</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#6-systemd-service">6. Systemd Service</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#service-management">Service Management</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#manual-execution">Manual Execution</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#rp2040-firmware">RP2040 Firmware</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#directory-structure">Directory Structure</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Ground Station</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/interface/">WebSerial Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/packet-parsing/">Packet Parsing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/image-transfer/">Image Transfer</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/radio-config/">Radio Configuration</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/telemetry-ids/">Telemetry ID Quick Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/packet-sizes/">Packet Size Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">TEMPEST Flight Software</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Flight Software</li>
+      <li class="breadcrumb-item active">Installation</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="installation">Installation</h1>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Raspberry Pi Zero W (or Pi Zero 2 W)</li>
+<li>Raspbian / Raspberry Pi OS Lite</li>
+<li>Python 3.x</li>
+<li>Hardware interfaces enabled: I2C, SPI, UART</li>
+</ul>
+<h2 id="quick-install">Quick Install</h2>
+<p>Run the install script from the project root:</p>
+<pre><code class="language-bash">sudo bash install.sh
+</code></pre>
+<p>This script performs the following:</p>
+<h3 id="1-system-update">1. System Update</h3>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt upgrade -y
+</code></pre>
+<h3 id="2-python-dependencies">2. Python Dependencies</h3>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pyyaml</code></td>
+<td>Configuration file parsing</td>
+</tr>
+<tr>
+<td><code>psutil</code></td>
+<td>System metrics (CPU, RAM, disk)</td>
+</tr>
+<tr>
+<td><code>pyserial</code></td>
+<td>UART communication with RP2040</td>
+</tr>
+<tr>
+<td><code>adafruit-circuitpython-rfm9x</code></td>
+<td>RFM95 LoRa radio driver</td>
+</tr>
+<tr>
+<td><code>adafruit-circuitpython-rfm69</code></td>
+<td>RFM69 FSK radio driver</td>
+</tr>
+<tr>
+<td><code>adafruit-extended-bus</code></td>
+<td>Extended SPI/I2C bus support</td>
+</tr>
+<tr>
+<td><code>adafruit-ina219</code></td>
+<td>INA219 current sensor driver</td>
+</tr>
+<tr>
+<td><code>watchdog</code></td>
+<td>File system monitoring for config reload</td>
+</tr>
+<tr>
+<td><code>pigpio</code></td>
+<td>Software UART for EPS communication</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-hardware-interface-configuration">3. Hardware Interface Configuration</h3>
+<p>The script enables the following via <code>raspi-config</code>:</p>
+<ul>
+<li><strong>I2C</strong> — For INA219 solar sensors</li>
+<li><strong>SPI</strong> — For RFM69/RFM95 radio modules</li>
+<li><strong>UART</strong> — For RP2040 MCU communication</li>
+</ul>
+<h3 id="4-pigpiod-service">4. pigpiod Service</h3>
+<p>The <code>pigpio</code> daemon is required for bit-banged UART to the ATmega328PB EPS:</p>
+<pre><code class="language-bash">sudo systemctl enable pigpiod
+sudo systemctl start pigpiod
+</code></pre>
+<h3 id="5-wifi-access-point">5. WiFi Access Point</h3>
+<p>The installer reconfigures NetworkManager so the Pi stops joining the default
+workshop network and instead broadcasts its own access point. The AP profile is
+named <code>tempest-ap</code> with:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSID</td>
+<td><code>$(hostname)</code> (e.g. <code>TEMPEST-1</code>, <code>TEMPEST-2</code>, …)</td>
+</tr>
+<tr>
+<td>Mode</td>
+<td>AP (2.4 GHz, <code>band bg</code>)</td>
+</tr>
+<tr>
+<td>IPv4</td>
+<td><code>shared</code> — NetworkManager runs DHCP + NAT (gateway <code>10.42.0.1</code>)</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>WPA2-PSK</td>
+</tr>
+<tr>
+<td>Default PSK</td>
+<td><code>Hack Space</code> (edit <code>AP_PSK</code> in <code>install.sh</code> to rotate)</td>
+</tr>
+</tbody>
+</table>
+<p>Existing wifi profiles have their <code>autoconnect</code> flag cleared so the AP wins on
+the next boot. The installer intentionally does <strong>not</strong> call <code>nmcli con up
+tempest-ap</code> because activating an AP on a single-radio Pi Zero would drop the
+SSH session running the script — the AP comes up cleanly after the final
+<code>sudo reboot</code>.</p>
+<h4 id="ssid-sync-to-hostname">SSID Sync to Hostname</h4>
+<p><code>install.sh</code> bakes the SSID into the <code>tempest-ap</code> NM profile using whatever
+hostname is set on the build machine at install time. Because the workshop
+flow generates one image and flashes it onto many SD cards (with per-unit
+hostnames set via Raspberry Pi Imager customizations), the baked-in SSID
+would otherwise be wrong on every cloned unit.</p>
+<p>To fix this, the installer also installs:</p>
+<ul>
+<li><code>/usr/local/bin/tempest-ap-ssid-sync</code> — a small shell script that rewrites
+  the <code>ssid=</code> line of <code>/etc/NetworkManager/system-connections/tempest-ap.nmconnection</code>
+  to match <code>$(hostname)</code>.</li>
+<li><code>/etc/systemd/system/tempest-ap-ssid-sync.service</code> — a <code>Type=oneshot</code> unit
+  ordered <code>Before=NetworkManager.service</code>, so the rewrite happens before NM
+  reads the profile and brings the AP up.</li>
+</ul>
+<p>The service runs on every boot. If the hostname matches the existing SSID,
+the <code>sed</code> is a no-op; if it doesn't, NM picks up the new SSID the moment it
+loads the profile, with no down/up flip required.</p>
+<p>To rotate the PSK on a deployed unit, SSH in and run:</p>
+<pre><code class="language-bash">sudo nmcli con modify tempest-ap wifi-sec.psk &quot;new-password&quot;
+sudo nmcli con down tempest-ap &amp;&amp; sudo nmcli con up tempest-ap
+</code></pre>
+<p>This drops every connected client (including your SSH session) — reconnect to
+the AP with the new key.</p>
+<h3 id="6-systemd-service">6. Systemd Service</h3>
+<p>The FSW runs as a systemd service that starts on boot and restarts on failure:</p>
+<pre><code class="language-ini">[Unit]
+Description=TEMPEST Flight Software
+After=multi-user.target pigpiod.service
+
+[Service]
+ExecStart=/usr/bin/python ${FSW_DIR}/main.py
+WorkingDirectory=${FSW_DIR}
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+<p><code>${FSW_DIR}</code> is expanded by <code>install.sh</code> at install time to the absolute
+path of the FSW checkout (the directory containing <code>install.sh</code> itself).
+This avoids hardcoding a <code>/home/&lt;user&gt;/TEMPEST_FSW</code> path that would break
+if the default username is changed via Raspberry Pi Imager.</p>
+<h2 id="service-management">Service Management</h2>
+<pre><code class="language-bash"># Start the FSW
+sudo systemctl start tempest_fsw
+
+# Stop the FSW
+sudo systemctl stop tempest_fsw
+
+# Check status
+sudo systemctl status tempest_fsw
+
+# View logs
+journalctl -u tempest_fsw -f
+
+# Restart after code changes
+sudo systemctl restart tempest_fsw
+</code></pre>
+<h2 id="manual-execution">Manual Execution</h2>
+<p>For development and debugging, run the FSW directly:</p>
+<pre><code class="language-bash"># Production mode (requires radio hardware)
+python main.py
+
+# CLI development mode (no radio required)
+python cli_fsw.py
+</code></pre>
+<h2 id="rp2040-firmware">RP2040 Firmware</h2>
+<p>The RP2040 Pico runs CircuitPython. To update the firmware:</p>
+<ol>
+<li>Hold the BOOTSEL button while connecting the Pico via USB</li>
+<li>Copy the CircuitPython <code>.uf2</code> file to the mounted drive</li>
+<li>After reboot, copy <code>code.py</code> to the Pico's <code>CIRCUITPY</code> drive</li>
+<li>Install required CircuitPython libraries:<ul>
+<li><code>adafruit_bno055</code></li>
+<li><code>adafruit_bmp280</code></li>
+</ul>
+</li>
+</ol>
+<p>See <a href="../sensor-mcu/">Sensor MCU</a> for details on the RP2040 firmware.</p>
+<h2 id="directory-structure">Directory Structure</h2>
+<pre><code>TEMPEST_FSW/
+├── main.py              # Production FSW (radio mode)
+├── cli_fsw.py           # Development FSW (CLI mode)
+├── code.py              # RP2040 CircuitPython firmware
+├── config.yml           # Radio configuration (live-reloaded)
+├── config.yml.bak       # Backup config (restored on startup)
+├── install.sh           # Installation script
+├── fsw_service.sh       # Systemd service creator
+├── capture/             # Image capture directory
+├── subsystems/
+│   ├── environmental.py # RP2040 UART interface
+│   ├── obc.py           # On-board computer functions
+│   ├── payload.py       # Camera and image handling
+│   ├── solar.py         # INA219 solar panel sensors
+│   ├── eps.py           # ATmega328PB EPS interface
+│   └── retransmit.py    # Packet retransmission
+├── utils/
+│   ├── radio.py         # Radio abstraction layer
+│   └── display.py       # Console output formatting
+├── FSC-GS/              # Ground station web interface
+│   ├── index.html
+│   ├── styles.css
+│   └── scripts/
+│       ├── main.js
+│       ├── telemetry.js
+│       ├── serial-communication.js
+│       ├── image-processing.js
+│       └── 3d-visualization.js
+└── docs/                # This documentation
+</code></pre>
+<p><img alt="Placeholder: Assembled TEMPEST flat-sat hardware" src="../img/placeholder-assembled-hardware.png" /></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../configuration/" class="btn btn-neutral float-left" title="Configuration"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../ground-station/overview/" class="btn btn-neutral float-right" title="Overview">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>&copy; 2024 ETHOS Labs, LLC</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../configuration/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../ground-station/overview/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

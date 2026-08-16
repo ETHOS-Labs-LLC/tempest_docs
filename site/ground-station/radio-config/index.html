@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="ETHOS Labs, LLC" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Radio Configuration - TEMPEST Flight Software</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Radio Configuration";
+        var mkdocs_page_input_path = "ground-station/radio-config.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> TEMPEST Flight Software
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Build Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_components/">TEMPEST Components Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_build_guide/">Building Your CubeSat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Quick Start: TEMPEST-0 on RFM69</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to TEMPEST</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Flight Software</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/commands/">Command Protocol</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/telemetry/">Telemetry Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/subsystems/">Subsystems</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/sensor-mcu/">Sensor MCU (RP2040)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/configuration/">Configuration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Ground Station</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../interface/">WebSerial Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../packet-parsing/">Packet Parsing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../image-transfer/">Image Transfer</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Radio Configuration</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuration-panel">Configuration Panel</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#uplink-configuration-ground-to-satellite">Uplink Configuration (Ground to Satellite)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#downlink-configuration-satellite-to-ground">Downlink Configuration (Satellite to Ground)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#ism-band-frequency-ranges">ISM Band Frequency Ranges</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#applying-configuration">Applying Configuration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#querying-current-configuration">Querying Current Configuration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#led-indicators">LED Indicators</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#radio-characteristics">Radio Characteristics</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#rfm69-fsk">RFM69 (FSK)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#rfm95-lora">RFM95 (LoRa)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#matching-satellite-configuration">Matching Satellite Configuration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#encryption">Encryption</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/telemetry-ids/">Telemetry ID Quick Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/packet-sizes/">Packet Size Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">TEMPEST Flight Software</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Ground Station</li>
+      <li class="breadcrumb-item active">Radio Configuration</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="radio-configuration">Radio Configuration</h1>
+<h2 id="overview">Overview</h2>
+<p>The ground station can configure both the uplink and downlink radio parameters through the browser interface. Configuration commands are sent to the GS Pico MCU, which applies them to its radio hardware.</p>
+<h2 id="configuration-panel">Configuration Panel</h2>
+<p><img alt="Placeholder: Radio configuration panel in browser" src="../img/placeholder-gs-radio-panel.png" /></p>
+<h3 id="uplink-configuration-ground-to-satellite">Uplink Configuration (Ground to Satellite)</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Options</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Radio Type</td>
+<td>RFM95 (LoRa), RFM69 (FSK)</td>
+<td>RFM95</td>
+</tr>
+<tr>
+<td>Band</td>
+<td>433 MHz, 868 MHz, 915 MHz</td>
+<td>915 MHz</td>
+</tr>
+<tr>
+<td>Frequency</td>
+<td>Within band range</td>
+<td>915.0 MHz</td>
+</tr>
+<tr>
+<td>Satellite Node</td>
+<td>0-255</td>
+<td>255 (broadcast)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="downlink-configuration-satellite-to-ground">Downlink Configuration (Satellite to Ground)</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Options</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Radio Type</td>
+<td>RFM95 (LoRa), RFM69 (FSK)</td>
+<td>RFM95</td>
+</tr>
+<tr>
+<td>Band</td>
+<td>433 MHz, 868 MHz, 915 MHz</td>
+<td>915 MHz</td>
+</tr>
+<tr>
+<td>Frequency</td>
+<td>Within band range</td>
+<td>915.0 MHz</td>
+</tr>
+<tr>
+<td>Ground Node</td>
+<td>0-255</td>
+<td>255 (broadcast)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ism-band-frequency-ranges">ISM Band Frequency Ranges</h2>
+<table>
+<thead>
+<tr>
+<th>Band</th>
+<th>Min (MHz)</th>
+<th>Max (MHz)</th>
+<th>Region</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>433</td>
+<td>433.05</td>
+<td>434.79</td>
+<td>Global</td>
+<td>433.92</td>
+</tr>
+<tr>
+<td>868</td>
+<td>863.0</td>
+<td>870.0</td>
+<td>EU</td>
+<td>869.5</td>
+</tr>
+<tr>
+<td>915</td>
+<td>902.0</td>
+<td>928.0</td>
+<td>US</td>
+<td>915.0</td>
+</tr>
+</tbody>
+</table>
+<p>The frequency input validates against the selected band range. Out-of-range values are highlighted with a red border.</p>
+<h2 id="applying-configuration">Applying Configuration</h2>
+<p>Click <strong>"Apply Configuration"</strong> to send both uplink and downlink settings:</p>
+<pre><code>set_uplink_radio rfm69 915.0 255
+set_downlink_radio rfm69 915.0 255
+</code></pre>
+<p>There is a 1-second delay between the uplink and downlink configuration commands.</p>
+<h2 id="querying-current-configuration">Querying Current Configuration</h2>
+<p>Click <strong>"Query Current Config"</strong> to request the current radio settings from the GS Pico MCU:</p>
+<pre><code>get_radio_config
+</code></pre>
+<p>The response updates the UI fields with the current hardware configuration.</p>
+<h2 id="led-indicators">LED Indicators</h2>
+<p>Four LED indicators show radio activity:</p>
+<table>
+<thead>
+<tr>
+<th>LED</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RFM95 TX</td>
+<td>LoRa transmission (uplink)</td>
+</tr>
+<tr>
+<td>RFM95 RX</td>
+<td>LoRa reception (downlink)</td>
+</tr>
+<tr>
+<td>RFM69 TX</td>
+<td>FSK transmission (uplink)</td>
+</tr>
+<tr>
+<td>RFM69 RX</td>
+<td>FSK reception (downlink)</td>
+</tr>
+</tbody>
+</table>
+<p>The active LED pair depends on the configured radio types. LEDs flash briefly (100ms) on each packet.</p>
+<h2 id="radio-characteristics">Radio Characteristics</h2>
+<h3 id="rfm69-fsk">RFM69 (FSK)</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modulation</td>
+<td>FSK/OOK</td>
+</tr>
+<tr>
+<td>FIFO Size</td>
+<td>66 bytes</td>
+</tr>
+<tr>
+<td>Library Header</td>
+<td>4 bytes</td>
+</tr>
+<tr>
+<td>Max Payload</td>
+<td>~50 bytes</td>
+</tr>
+<tr>
+<td>Data Rate</td>
+<td>Higher</td>
+</tr>
+<tr>
+<td>Range</td>
+<td>Shorter</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rfm95-lora">RFM95 (LoRa)</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modulation</td>
+<td>LoRa (CSS)</td>
+</tr>
+<tr>
+<td>FIFO Size</td>
+<td>252 bytes</td>
+</tr>
+<tr>
+<td>Library Header</td>
+<td>4 bytes</td>
+</tr>
+<tr>
+<td>Max Payload</td>
+<td>~240 bytes</td>
+</tr>
+<tr>
+<td>Data Rate</td>
+<td>Lower</td>
+</tr>
+<tr>
+<td>Range</td>
+<td>Longer</td>
+</tr>
+</tbody>
+</table>
+<h2 id="matching-satellite-configuration">Matching Satellite Configuration</h2>
+<p>The ground station radio settings must match the satellite's <code>config.yml</code>:</p>
+<table>
+<thead>
+<tr>
+<th>GS Setting</th>
+<th>Satellite Config</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Uplink Radio Type</td>
+<td><code>Tempest.Comms.uplink.radio</code></td>
+</tr>
+<tr>
+<td>Uplink Frequency</td>
+<td><code>Tempest.Comms.uplink.freq</code></td>
+</tr>
+<tr>
+<td>Downlink Radio Type</td>
+<td><code>Tempest.Comms.downlink.radio</code></td>
+</tr>
+<tr>
+<td>Downlink Frequency</td>
+<td><code>Tempest.Comms.downlink.freq</code></td>
+</tr>
+</tbody>
+</table>
+<p>If the radio types or frequencies don't match, communication will fail silently — no error is reported.</p>
+<h2 id="encryption">Encryption</h2>
+<p>Both the satellite and ground station support AES encryption (configured in <code>config.yml</code>). When enabled, both ends must use the same 16-byte encryption key. Encryption configuration is currently only available through <code>config.yml</code> on the satellite side, not through the browser interface.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../image-transfer/" class="btn btn-neutral float-left" title="Image Transfer"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../reference/telemetry-ids/" class="btn btn-neutral float-right" title="Telemetry ID Quick Reference">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>&copy; 2024 ETHOS Labs, LLC</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../image-transfer/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../reference/telemetry-ids/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

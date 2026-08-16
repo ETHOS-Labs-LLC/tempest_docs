@@ -16,6 +16,7 @@
 | `QUAT` | Quaternion | 20 | `4s + 4f` | `GET_QUATERNION` |
 | `SOLR` | Solar Panels | 36 | `4s + 8f` | `GET_SOLAR` |
 | `HOST` | Hostname | 15 | `4s + 11s` | `GET_HOSTNAME` |
+| `WIFI` | WiFi SSID + IP | 51 | `4s + 32s + 15s` | `WIFI_INFO` |
 | `PHOT` | Photo Captured | Variable | `4s + I + data` | `TAKE_PHOTO` |
 | `OBCP` | Process List | Variable | `4s + text` | `OBC_PROCESSES` |
 | `OBCC` | CPU Usage | 8 | `4s + f` | `OBC_CPU` |
@@ -44,6 +45,7 @@ SOLR                            →  36 bytes (8 floats)
 EPSS                            →  28 bytes (5 ints + 1 float)
 OBCC, OBCR, OBCD               →   8 bytes (1 float)
 HOST                            →  15 bytes (11-char string)
+WIFI                            →  51 bytes (32-char SSID + 15-char IP)
 BECN                            →  24 bytes (1 uint + 4 floats)
 XFRC                            →   8 bytes (1 uint)
 ```

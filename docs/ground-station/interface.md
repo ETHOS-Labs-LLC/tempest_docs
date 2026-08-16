@@ -69,6 +69,7 @@ Preset buttons send common commands with a single click:
 | RAM | `OBC_RAM` |
 | Proc | `OBC_PROCESSES` |
 | Host | `GET_HOSTNAME` |
+| WiFi | `WIFI_INFO` |
 
 ### All Commands Reference
 

@@ -70,6 +70,7 @@ Provides system information using `psutil` and manages image file operations.
 | `get_ram_usage()` | float | RAM utilization percentage |
 | `get_disk_usage()` | float | Disk utilization percentage |
 | `get_hostname()` | bytes | Hostname padded/truncated to 11 bytes |
+| `get_wifi_info()` | (bytes, bytes) | Active wifi SSID (32 bytes, space-padded) and first IPv4 address (15 bytes). Queries NetworkManager via `nmcli`, falls back to `socket.gethostname()` for SSID and `0.0.0.0` for IP if the lookup fails |
 | `list_files(dir)` | string | Comma-separated file listing. Defaults to `capture` |
 | `reboot()` | — | Executes `sudo reboot` |
 

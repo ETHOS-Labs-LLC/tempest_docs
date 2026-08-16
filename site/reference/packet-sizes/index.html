@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="ETHOS Labs, LLC" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Packet Size Reference - TEMPEST Flight Software</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Packet Size Reference";
+        var mkdocs_page_input_path = "reference/packet-sizes.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> TEMPEST Flight Software
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Build Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_components/">TEMPEST Components Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_build_guide/">Building Your CubeSat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Quick Start: TEMPEST-0 on RFM69</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to TEMPEST</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Flight Software</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/commands/">Command Protocol</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/telemetry/">Telemetry Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/subsystems/">Subsystems</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/sensor-mcu/">Sensor MCU (RP2040)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/configuration/">Configuration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Ground Station</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/interface/">WebSerial Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/packet-parsing/">Packet Parsing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/image-transfer/">Image Transfer</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/radio-config/">Radio Configuration</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../telemetry-ids/">Telemetry ID Quick Reference</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Packet Size Reference</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#radio-payload-limits">Radio Payload Limits</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#telemetry-packet-sizes-including-4-byte-id">Telemetry Packet Sizes (including 4-byte ID)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#chunked-data-sizes">Chunked Data Sizes</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#image-packet-sizes">Image Packet Sizes</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#size-calculation-examples">Size Calculation Examples</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#rfm69-image-packet">RFM69 Image Packet</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#rfm69-obcp-chunk">RFM69 OBCP Chunk</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#exceeding-limits">Exceeding Limits</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">TEMPEST Flight Software</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Reference</li>
+      <li class="breadcrumb-item active">Packet Size Reference</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="packet-size-reference">Packet Size Reference</h1>
+<h2 id="radio-payload-limits">Radio Payload Limits</h2>
+<table>
+<thead>
+<tr>
+<th>Radio</th>
+<th>FIFO Size</th>
+<th>Adafruit Header</th>
+<th><code>\n</code> Delimiter</th>
+<th>Usable Payload</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RFM69</td>
+<td>66 bytes</td>
+<td>4 bytes</td>
+<td>1 byte</td>
+<td><strong>61 bytes</strong></td>
+</tr>
+<tr>
+<td>RFM95</td>
+<td>252 bytes</td>
+<td>4 bytes</td>
+<td>1 byte</td>
+<td><strong>247 bytes</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The configured chunk sizes in <code>config.yml</code> provide additional margin:</p>
+<table>
+<thead>
+<tr>
+<th>Radio</th>
+<th>Config <code>chunk_size</code></th>
+<th>Effective Payload</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RFM69</td>
+<td>50 bytes</td>
+<td>50 - 1 (<code>\n</code>) = <strong>49 bytes data</strong></td>
+</tr>
+<tr>
+<td>RFM95</td>
+<td>240 bytes</td>
+<td>240 - 1 (<code>\n</code>) = <strong>239 bytes data</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="telemetry-packet-sizes-including-4-byte-id">Telemetry Packet Sizes (including 4-byte ID)</h2>
+<p>All sizes include the 4-byte identifier but exclude the <code>\n</code> appended by <code>radio.py</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Packet</th>
+<th>Total Size</th>
+<th>Fits RFM69?</th>
+<th>Fits RFM95?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GYRO</td>
+<td>16</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>ACCL</td>
+<td>16</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>MAGN</td>
+<td>16</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>GRAV</td>
+<td>16</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>EULR</td>
+<td>16</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>BME2</td>
+<td>16</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>TEMP</td>
+<td>8</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>QUAT</td>
+<td>20</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>ADCS</td>
+<td>32</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>SOLR</td>
+<td>36</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>EPSS</td>
+<td>28</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>OBCC</td>
+<td>8</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>OBCR</td>
+<td>8</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>OBCD</td>
+<td>8</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>HOST</td>
+<td>15</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>WIFI</td>
+<td>51</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>BECN</td>
+<td>24</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>XFRC</td>
+<td>8</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="chunked-data-sizes">Chunked Data Sizes</h2>
+<p>For multi-packet responses (<code>OBCP</code>, <code>OBCL</code>), each chunk is:</p>
+<pre><code>[4-byte ID] + [payload] + [\n from radio.py]
+max_chunk_payload = chunk_size - 5
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Radio</th>
+<th>chunk_size</th>
+<th>ID</th>
+<th><code>\n</code></th>
+<th>Max Payload per Chunk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RFM69</td>
+<td>50</td>
+<td>4</td>
+<td>1</td>
+<td><strong>45 bytes</strong></td>
+</tr>
+<tr>
+<td>RFM95</td>
+<td>240</td>
+<td>4</td>
+<td>1</td>
+<td><strong>235 bytes</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="image-packet-sizes">Image Packet Sizes</h2>
+<p>Image packets use a different calculation because they're text-based:</p>
+<pre><code>SEND[base64_data][total:04d][current:04d]
+  4  +  b64_len  +    4    +     4      = total
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Radio</th>
+<th>Raw Chunk</th>
+<th>Base64</th>
+<th>+ ID + Meta</th>
+<th>Total</th>
+<th>Within Limit?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RFM69</td>
+<td>33 bytes</td>
+<td>44 chars</td>
+<td>+ 4 + 8 = 56</td>
+<td><strong>56 bytes</strong></td>
+<td>Yes (&lt; 61)</td>
+</tr>
+<tr>
+<td>RFM95</td>
+<td>168 bytes</td>
+<td>224 chars</td>
+<td>+ 4 + 8 = 236</td>
+<td><strong>236 bytes</strong></td>
+<td>Yes (&lt; 247)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="size-calculation-examples">Size Calculation Examples</h2>
+<h3 id="rfm69-image-packet">RFM69 Image Packet</h3>
+<pre><code>Raw data chunk:   33 bytes
+Base64 encoded:   ceil(33/3) * 4 = 44 characters
+SEND identifier:  4 bytes
+Metadata:         8 bytes (4 total + 4 current)
+                  ─────────
+Packet total:     56 bytes
++ \n from radio:  1 byte
+                  ─────────
+On-air total:     57 bytes  (&lt; 66 byte FIFO limit)
+</code></pre>
+<h3 id="rfm69-obcp-chunk">RFM69 OBCP Chunk</h3>
+<pre><code>OBCP identifier:  4 bytes
+Text payload:     45 bytes max
+                  ─────────
+Packet total:     49 bytes
++ \n from radio:  1 byte
+                  ─────────
+On-air total:     50 bytes  (= chunk_size config)
+</code></pre>
+<h2 id="exceeding-limits">Exceeding Limits</h2>
+<p>If a packet exceeds the radio FIFO size, the Adafruit library raises an <code>AssertionError</code>. This most commonly occurs with:</p>
+<ul>
+<li>Image packets when chunk sizes aren't properly tuned</li>
+<li>OBC process/file listing chunks when using the wrong default size</li>
+<li>Any packet that doesn't account for the 4-byte Adafruit header + 1-byte <code>\n</code></li>
+</ul>
+<p>The <code>chunk_data()</code> function in <code>main.py</code> automatically calculates the correct max payload size based on the active radio's chunk size configuration.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../telemetry-ids/" class="btn btn-neutral float-left" title="Telemetry ID Quick Reference"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../troubleshooting/" class="btn btn-neutral float-right" title="Troubleshooting">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>&copy; 2024 ETHOS Labs, LLC</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../telemetry-ids/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../troubleshooting/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

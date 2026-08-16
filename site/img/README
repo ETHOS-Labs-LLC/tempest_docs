@@ -1,0 +1,30 @@
+Screenshot Placeholders
+=======================
+
+The following screenshots are referenced in the documentation and need to be captured:
+
+FLIGHT SOFTWARE
+- placeholder-uart-wiring.png          : UART wiring between Pi Zero and RP2040
+- placeholder-solar-wiring.png         : Solar panel INA219 sensor wiring
+- placeholder-rp2040-sensors.png       : RP2040 Pico with BNO055 and BMP280 connected
+- placeholder-rp2040-wiring.png        : RP2040 full wiring diagram
+- placeholder-radio-wiring.png         : Radio module SPI wiring on Pi Zero
+- placeholder-assembled-hardware.png   : Assembled TEMPEST flat-sat hardware
+
+GROUND STATION
+- placeholder-gs-full-interface.png    : Ground station full interface (Operate tab)
+- placeholder-gs-left-column.png       : Left column - connection and radio panels
+- placeholder-gs-middle-column.png     : Middle column - event log and telemetry
+- placeholder-gs-right-column.png      : Right column - command center and 3D orientation
+- placeholder-gsb-closeup.png          : Global Status Bar close-up
+- placeholder-gs-disconnected.png      : Initial disconnected state
+- placeholder-gs-connected.png         : Connected state with green indicators
+- placeholder-gs-radio-config.png      : Radio configuration panel
+- placeholder-gs-event-log.png         : Event log with mixed message types
+- placeholder-gs-telemetry.png         : Live telemetry panels with real data
+- placeholder-gs-3d-orientation.png    : 3D satellite orientation visualization
+- placeholder-gs-classification.png    : Classification banner examples
+- placeholder-gs-radio-panel.png       : Radio configuration panel (detailed)
+- placeholder-gs-image-progress.png    : Image reception progress in event log
+- placeholder-gs-image-complete.png    : Completed image with download links
+- placeholder-gs-active-images.png     : Active images panel showing transfer progress

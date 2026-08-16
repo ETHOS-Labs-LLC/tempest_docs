@@ -190,6 +190,22 @@ struct.pack('4s11s', b'HOST', hostname_bytes)
 
 **Total: 15 bytes**
 
+### WIFI — WiFi Access Point Info
+
+```
+struct.pack('4s32s15s', b'WIFI', ssid_bytes, ip_bytes)
+```
+
+| Offset | Size | Type | Field |
+|--------|------|------|-------|
+| 0 | 4 | char[4] | Identifier |
+| 4 | 32 | char[32] | SSID (space-padded UTF-8) |
+| 36 | 15 | char[15] | IPv4 address (space-padded ASCII, e.g. `10.42.0.1`) |
+
+**Total: 51 bytes**
+
+SSID is queried from the active NetworkManager wifi connection and falls back to the system hostname. IP is the first address reported by `hostname -I` (the AP gateway on the `tempest-ap` profile is typically `10.42.0.1`).
+
 ### BECN — Health Beacon
 
 ```

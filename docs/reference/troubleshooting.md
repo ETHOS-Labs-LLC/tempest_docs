@@ -91,6 +91,46 @@ For RFM69, your payload must be <= 61 bytes.
 2. **Missing gzip header** — Verify the file is actually gzip compressed (header: `0x1F 0x8B`)
 3. **Chunk ordering** — Base64 padding (`==`) should only be on the final chunk
 
+## WiFi / AP Issues
+
+### Can't See the Satellite's SSID
+
+**Symptom:** After `install.sh` and reboot, your laptop doesn't see
+`TEMPEST-N` in the wifi list.
+
+**Possible Causes:**
+
+1. **Hostname not set before install** — the AP profile bakes the hostname
+   into the SSID at install time. Verify with `nmcli con show tempest-ap |
+   grep 802-11-wireless.ssid`. If it's wrong, fix the hostname
+   (`sudo raspi-config nonint do_hostname TEMPEST-3`) and recreate the
+   profile, or edit `802-11-wireless.ssid` on the existing profile.
+2. **Another wifi profile beat the AP to activation** — confirm the AP is
+   active with `nmcli con show --active`. If a client profile is active
+   instead, set its `connection.autoconnect` to `no` and reboot.
+3. **The Pi Zero W is out of range** — the AP is 2.4 GHz only and the Pi
+   antenna is weak.
+
+### Forgot the AP Password
+
+**Symptom:** Can't connect to the satellite's AP because the PSK was rotated.
+
+**Fix:** Pull the SD card, mount it on a laptop, and edit
+`/etc/NetworkManager/system-connections/tempest-ap.nmconnection`. Update the
+`psk` field under `[wifi-security]`. Reinsert and reboot.
+
+### `WIFI_INFO` Returns Empty SSID
+
+**Symptom:** The `WIFI` telemetry packet arrives but the SSID field is the
+hostname rather than the actual AP SSID.
+
+**Cause:** `nmcli` query failed, falling back to `socket.gethostname()`. This
+usually means NetworkManager isn't running or the `tempest-ap` profile isn't
+active.
+
+**Fix:** SSH in, check `systemctl status NetworkManager` and
+`nmcli con show --active`. Restart NetworkManager if needed.
+
 ## Sensor Issues
 
 ### Stale Data on First Read

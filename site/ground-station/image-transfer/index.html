@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="ETHOS Labs, LLC" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Image Transfer - TEMPEST Flight Software</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Image Transfer";
+        var mkdocs_page_input_path = "ground-station/image-transfer.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> TEMPEST Flight Software
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Build Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_components/">TEMPEST Components Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_build_guide/">Building Your CubeSat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Quick Start: TEMPEST-0 on RFM69</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to TEMPEST</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Flight Software</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/commands/">Command Protocol</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/telemetry/">Telemetry Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/subsystems/">Subsystems</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/sensor-mcu/">Sensor MCU (RP2040)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/configuration/">Configuration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../fsw/installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Ground Station</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../interface/">WebSerial Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../packet-parsing/">Packet Parsing</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Image Transfer</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#transfer-pipeline">Transfer Pipeline</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-1-capture-satellite">Step 1: Capture (Satellite)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-2-initiate-transfer-ground">Step 2: Initiate Transfer (Ground)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-3-chunking-satellite">Step 3: Chunking (Satellite)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-4-paced-transmission-satellite">Step 4: Paced Transmission (Satellite)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-5-reception-ground-station">Step 5: Reception (Ground Station)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-6-completion-check">Step 6: Completion Check</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-7-reconstruction-ground-station">Step 7: Reconstruction (Ground Station)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#retransmission">Retransmission</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#automatic-detection">Automatic Detection</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#manual-retransmit">Manual Retransmit</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#retransmit-batching">Retransmit Batching</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#active-image-management">Active Image Management</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#timing-considerations">Timing Considerations</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../radio-config/">Radio Configuration</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/telemetry-ids/">Telemetry ID Quick Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/packet-sizes/">Packet Size Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">TEMPEST Flight Software</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Ground Station</li>
+      <li class="breadcrumb-item active">Image Transfer</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="image-transfer">Image Transfer</h1>
+<h2 id="overview">Overview</h2>
+<p>Image transfer over radio is the most complex operation in the TEMPEST system. Images are captured by the Pi Zero camera, compressed, encoded, chunked, and transmitted packet-by-packet. The ground station reassembles, decompresses, and displays the image.</p>
+<h2 id="transfer-pipeline">Transfer Pipeline</h2>
+<pre><code>┌─────────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
+│ rpicam-still│───►│   gzip   │───►│  base64  │───►│  chunk   │───►│  radio   │
+│  (JPEG)     │    │ compress │    │  encode  │    │ + metadata│   │   TX     │
+└─────────────┘    └──────────┘    └──────────┘    └──────────┘    └──────────┘
+
+                            SATELLITE (Pi Zero)
+═══════════════════════════════════════════════════════════════════════════════
+                            GROUND STATION (Browser)
+
+┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
+│  radio   │───►│  parse   │───►│ reassemble│──►│  base64  │───►│  gunzip  │
+│   RX     │    │ metadata │    │  chunks  │    │  decode  │    │ decompress│
+└──────────┘    └──────────┘    └──────────┘    └──────────┘    └──────────┘
+                                                                     │
+                                                              ┌──────▼──────┐
+                                                              │  Display    │
+                                                              │  JPEG       │
+                                                              └─────────────┘
+</code></pre>
+<h2 id="step-1-capture-satellite">Step 1: Capture (Satellite)</h2>
+<pre><code class="language-bash">TAKE_PHOTO
+</code></pre>
+<p>The camera subsystem executes:</p>
+<pre><code class="language-bash">rpicam-still -q 40 -o capture/{count}.jpg
+</code></pre>
+<p>Then gzip compresses the JPEG. The <code>PHOT</code> response returns the filename.</p>
+<h2 id="step-2-initiate-transfer-ground">Step 2: Initiate Transfer (Ground)</h2>
+<pre><code class="language-bash">SEND_IMAGE 5.jpg.gz
+</code></pre>
+<p>The FSW loads the gzip file and processes it into chunks.</p>
+<h2 id="step-3-chunking-satellite">Step 3: Chunking (Satellite)</h2>
+<p>The file is split into chunks sized for the active radio:</p>
+<table>
+<thead>
+<tr>
+<th>Radio</th>
+<th>Raw Chunk Size</th>
+<th>Base64 Size</th>
+<th>+ Metadata</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RFM69</td>
+<td>33 bytes</td>
+<td>44 chars</td>
+<td>+ 8 digits</td>
+<td>~52 bytes</td>
+</tr>
+<tr>
+<td>RFM95</td>
+<td>168 bytes</td>
+<td>224 chars</td>
+<td>+ 8 digits</td>
+<td>~232 bytes</td>
+</tr>
+</tbody>
+</table>
+<p>Each packet is formatted as:</p>
+<pre><code>SEND[base64_data][total_chunks:04d][current_chunk:04d]
+</code></pre>
+<p><strong>Example</strong> (RFM69, 100 total chunks, chunk #7):</p>
+<pre><code>SENDaGVsbG8gd29ybGQhIFRoaXMgaXMgYSB0ZXN0IGNodW5r01000007
+    ├─── 44 chars base64 ───┤├─total─┤├─current─┤
+</code></pre>
+<p>A <code>.chunked</code> file is also written to disk for retransmission support.</p>
+<h2 id="step-4-paced-transmission-satellite">Step 4: Paced Transmission (Satellite)</h2>
+<p>The FSW transmits packets with a configurable delay to avoid overwhelming the receiver:</p>
+<ul>
+<li><strong>Delay</strong>: 0.25 seconds between packets (<code>DEFAULT_TX_DELAY</code>)</li>
+<li><strong>Progress</strong>: Logged every 50 packets</li>
+<li><strong>End marker</strong>: <code>XFRC</code> packet with total packet count</li>
+</ul>
+<pre><code>SEND packet 0 → 0.25s → SEND packet 1 → 0.25s → ... → SEND packet N → XFRC
+</code></pre>
+<h2 id="step-5-reception-ground-station">Step 5: Reception (Ground Station)</h2>
+<p>The browser processes each incoming <code>SEND</code> packet:</p>
+<ol>
+<li>Extract the last 8 characters as metadata</li>
+<li>Parse <code>total_chunks</code> (first 4 digits) and <code>current_chunk</code> (last 4 digits)</li>
+<li>Store the base64 data in a <code>packetBuffer</code> Map, keyed by chunk number</li>
+<li>Track received chunks in a Set</li>
+</ol>
+<pre><code class="language-javascript">// Metadata extraction
+const metaStr = textData.substring(textData.length - 8);
+const totalChunks = parseInt(metaStr.substring(0, 4));
+const currentChunk = parseInt(metaStr.substring(4, 8));
+const b64Data = textData.substring(0, textData.length - 8);
+</code></pre>
+<p><img alt="Placeholder: Image reception progress in event log" src="../img/placeholder-gs-image-progress.png" /></p>
+<h2 id="step-6-completion-check">Step 6: Completion Check</h2>
+<p>When the <code>XFRC</code> packet arrives:</p>
+<ol>
+<li>Compare total expected packets against received count</li>
+<li>If all received: trigger image reconstruction</li>
+<li>If missing: list missing packet numbers and suggest retransmit command</li>
+</ol>
+<pre><code>Image 5.jpg.gz: 95/100 received (95.0%), 5 missing
+Missing packets: 12, 34, 56, 78, 99
+Use: RETRANSMIT 5.jpg.gz.chunked 12 34 56 78 99
+</code></pre>
+<h2 id="step-7-reconstruction-ground-station">Step 7: Reconstruction (Ground Station)</h2>
+<p>When all chunks are received (or manually triggered):</p>
+<ol>
+<li>Sort chunks by number (0 to N)</li>
+<li>Concatenate base64 data (remove padding <code>==</code> from all but the last chunk)</li>
+<li>Base64 decode to binary (<code>atob()</code>)</li>
+<li>Verify gzip header (<code>0x1F 0x8B</code>)</li>
+<li>Decompress using <code>DecompressionStream('gzip')</code></li>
+<li>Create download links for both the raw <code>.jpg.gz</code> and decompressed <code>.jpg</code></li>
+</ol>
+<p><img alt="Placeholder: Completed image with download links in browser" src="../img/placeholder-gs-image-complete.png" /></p>
+<h2 id="retransmission">Retransmission</h2>
+<h3 id="automatic-detection">Automatic Detection</h3>
+<p>A 30-second timeout checker runs in the background. If no new packets arrive for 30 seconds during an active transfer, it lists missing packets and suggests a retransmit command.</p>
+<h3 id="manual-retransmit">Manual Retransmit</h3>
+<p>Use the retransmit input field in the Image Management section:</p>
+<pre><code>5.jpg.gz.chunked 12,34,56,78,99
+</code></pre>
+<p>Or send directly as a command:</p>
+<pre><code>RETRANSMIT 5.jpg.gz.chunked 12 34 56 78 99
+</code></pre>
+<h3 id="retransmit-batching">Retransmit Batching</h3>
+<p>Large retransmit requests are split into batches to fit within the command size limit (60 bytes). Batches are sent with a 2-second delay between them. Maximum 3 retransmit attempts per image.</p>
+<h2 id="active-image-management">Active Image Management</h2>
+<ul>
+<li><strong>Active Images</strong>: Shows all in-progress image receptions with packet count and completion percentage</li>
+<li><strong>Clear Buffers</strong>: Discards all image reception state</li>
+</ul>
+<p><img alt="Placeholder: Active images panel showing transfer progress" src="../img/placeholder-gs-active-images.png" /></p>
+<h2 id="timing-considerations">Timing Considerations</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TX delay</td>
+<td>0.25s</td>
+<td>Between consecutive packets</td>
+</tr>
+<tr>
+<td>Timeout</td>
+<td>30s</td>
+<td>Before suggesting retransmit</td>
+</tr>
+<tr>
+<td>Retransmit batch delay</td>
+<td>2s</td>
+<td>Between retransmit batches</td>
+</tr>
+<tr>
+<td>Max retransmit attempts</td>
+<td>3</td>
+<td>Per image</td>
+</tr>
+</tbody>
+</table>
+<p>For a 100-packet image on RFM69: ~25 seconds transfer time (100 × 0.25s).</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../packet-parsing/" class="btn btn-neutral float-left" title="Packet Parsing"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../radio-config/" class="btn btn-neutral float-right" title="Radio Configuration">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>&copy; 2024 ETHOS Labs, LLC</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../packet-parsing/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../radio-config/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

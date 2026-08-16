@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="ETHOS Labs, LLC" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Quick Start: TEMPEST-0 on RFM69 - TEMPEST Flight Software</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Quick Start: TEMPEST-0 on RFM69";
+        var mkdocs_page_input_path = "quickstart.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> TEMPEST Flight Software
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Build Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../tempest_components/">TEMPEST Components Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../tempest_build_guide/">Building Your CubeSat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Quick Start: TEMPEST-0 on RFM69</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-set-the-hostname">1. Set the Hostname</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#option-a-during-imaging-recommended">Option A — during imaging (recommended)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#option-b-on-a-running-unit">Option B — on a running unit</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#verify">Verify</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-set-the-radios">2. Set the Radios</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-start-the-fsw">3. Start the FSW</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#verify_1">Verify</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-match-the-ground-station">4. Match the Ground Station</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-confirm-the-link">5. Confirm the Link</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#fleet-note">Fleet Note</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../connecting_to_wifi/">Connecting to TEMPEST</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Flight Software</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../fsw/architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fsw/commands/">Command Protocol</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fsw/telemetry/">Telemetry Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fsw/subsystems/">Subsystems</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fsw/sensor-mcu/">Sensor MCU (RP2040)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fsw/configuration/">Configuration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../fsw/installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Ground Station</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../ground-station/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ground-station/interface/">WebSerial Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ground-station/packet-parsing/">Packet Parsing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ground-station/image-transfer/">Image Transfer</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ground-station/radio-config/">Radio Configuration</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../reference/telemetry-ids/">Telemetry ID Quick Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../reference/packet-sizes/">Packet Size Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">TEMPEST Flight Software</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Setup</li>
+      <li class="breadcrumb-item active">Quick Start: TEMPEST-0 on RFM69</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="quick-start-tempest-0-on-rfm69-915-mhz">Quick Start: TEMPEST-0 on RFM69 @ 915 MHz</h1>
+<p>This guide takes one CubeSat from a freshly imaged card to a working radio link,
+configured as:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hostname</td>
+<td><code>TEMPEST-0</code></td>
+</tr>
+<tr>
+<td>Radio node address</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td>Radio type</td>
+<td>RFM69 (FSK)</td>
+</tr>
+<tr>
+<td>Frequency</td>
+<td>915 MHz</td>
+</tr>
+<tr>
+<td>Uplink / downlink</td>
+<td>Same radio</td>
+</tr>
+<tr>
+<td>Encryption</td>
+<td>Off</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Use the numeral zero, not the letter O</p>
+<p>The hostname must be <code>TEMPEST-0</code> — <strong>zero</strong>, not <code>TEMPEST-O</code>.</p>
+<p>The FSW derives the radio node address by parsing the text after the dash
+as an integer (<code>utils/radio.py</code>):</p>
+<p><code>python
+uplink.node = int(socket.gethostname().split("-")[1]) * 10</code></p>
+<p>A letter <code>O</code> cannot be parsed and the FSW crashes on startup with:</p>
+<p><code>ValueError: invalid literal for int() with base 10: 'O'</code></p>
+<p>Zero is the only hostname suffix that produces node <code>0</code>, since the parsed
+integer is multiplied by 10 (<code>TEMPEST-1</code> → node 10, <code>TEMPEST-2</code> → node 20).</p>
+</div>
+<hr />
+<h2 id="1-set-the-hostname">1. Set the Hostname</h2>
+<h3 id="option-a-during-imaging-recommended">Option A — during imaging (recommended)</h3>
+<p>Follow <a href="../connecting_to_wifi/#imaging-a-fresh-microsd-card">Connecting to Your TEMPEST CubeSat</a>
+and, at the <strong><code>EDIT SETTINGS</code></strong> step, set:</p>
+<ul>
+<li><strong>Hostname</strong>: <code>TEMPEST-0</code></li>
+</ul>
+<p>The AP SSID is derived from the hostname, so the unit will broadcast
+<code>TEMPEST-0</code> on first boot.</p>
+<h3 id="option-b-on-a-running-unit">Option B — on a running unit</h3>
+<p>SSH in (see <a href="../connecting_to_wifi/#connecting-from-your-laptop">Connecting from Your Laptop</a>),
+then:</p>
+<pre><code class="language-bash">sudo hostnamectl set-hostname TEMPEST-0
+sudo reboot
+</code></pre>
+<p>The <code>tempest-ap-ssid-sync</code> service installed by <code>install.sh</code> rewrites the WiFi
+AP SSID from the current hostname on every boot, so the SSID follows the
+rename automatically after the reboot.</p>
+<h3 id="verify">Verify</h3>
+<pre><code class="language-bash">hostname
+</code></pre>
+<p>Expected output — confirm visually that this is a zero:</p>
+<pre><code>TEMPEST-0
+</code></pre>
+<hr />
+<h2 id="2-set-the-radios">2. Set the Radios</h2>
+<p>The radio type and frequency live in <code>config.yml</code> in the FSW directory.</p>
+<div class="admonition danger">
+<p class="admonition-title">Edit both config.yml and config.yml.bak</p>
+<p>On every start, <code>main.py</code> copies <code>config.yml.bak</code> over <code>config.yml</code>:</p>
+<p><code>python
+if os.path.exists(BACKUP_FILE):
+    shutil.copy(BACKUP_FILE, CONFIG_FILE)</code></p>
+<p>This resets any live changes made during a session (the FSW watches
+<code>config.yml</code> for runtime edits). If you only edit <code>config.yml</code>, your
+settings are <strong>silently reverted the next time the FSW starts</strong>. Edit the
+<code>.bak</code> file too, or copy one over the other.</p>
+</div>
+<p>Edit the file:</p>
+<pre><code class="language-bash">cd ~/TEMPEST_FSW
+nano config.yml
+</code></pre>
+<p>Set uplink and downlink to RFM69 at 915 MHz:</p>
+<pre><code class="language-yaml">Tempest:
+  Comms:
+    uplink:
+      radio: rfm69
+      freq: 915
+      encryption: false
+      enc_key: &quot;&quot;
+
+    downlink:
+      radio: rfm69
+      freq: 915
+      chunk_sizes:
+        rfm95: 240
+        rfm69: 50
+      encryption: false
+      enc_key: &quot;&quot;
+
+    crosslink:
+      radio: &quot;none&quot;
+      frequency: 921
+      encryption: false
+      enc_key: &quot;&quot;
+</code></pre>
+<p>Then push the same content into the backup so it survives a restart:</p>
+<pre><code class="language-bash">cp config.yml config.yml.bak
+</code></pre>
+<p>Notes on these values:</p>
+<ul>
+<li><code>radio</code> must be lowercase <code>rfm69</code>. Any other value except <code>rfm95</code> raises
+  <code>ValueError: Unsupported uplink radio type</code>.</li>
+<li>Because uplink and downlink are both <code>rfm69</code>, the FSW shares a single radio
+  instance between them — you'll see <code>Downlink  same as uplink</code> at startup.</li>
+<li>Leave <code>chunk_sizes</code> alone. The RFM69 FIFO is 66 bytes, and the 50-byte chunk
+  size accounts for the 4-byte library header.</li>
+<li>915 MHz is the US ISM band (902–928 MHz). Confirm this band is legal in your
+  region before transmitting.</li>
+</ul>
+<hr />
+<h2 id="3-start-the-fsw">3. Start the FSW</h2>
+<p>Restart the service so it picks up the new hostname and config:</p>
+<pre><code class="language-bash">sudo systemctl restart tempest_fsw
+sudo systemctl status tempest_fsw
+</code></pre>
+<p>To watch it run in the foreground instead:</p>
+<pre><code class="language-bash">sudo systemctl stop tempest_fsw
+cd ~/TEMPEST_FSW
+python3 main.py
+</code></pre>
+<h3 id="verify_1">Verify</h3>
+<p>The startup banner reports the live radio settings. Confirm all three lines:</p>
+<pre><code>  Radio     RFM69 @ 915 MHz
+  Node      0
+  Downlink  same as uplink
+  Status    Ready
+</code></pre>
+<p>If <code>Node</code> reads anything other than <code>0</code>, the hostname is wrong — go back to
+step 1. If the FSW exits with a <code>ValueError</code> about <code>int()</code>, the hostname
+contains the letter <code>O</code>.</p>
+<hr />
+<h2 id="4-match-the-ground-station">4. Match the Ground Station</h2>
+<p>The ground station will not report an error if it disagrees with the
+satellite — the link just fails silently. Open the GS browser interface and
+set both sides in the radio configuration panel:</p>
+<p><strong>Uplink (ground → satellite)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Radio Type</td>
+<td>RFM69</td>
+</tr>
+<tr>
+<td>Band</td>
+<td>915 MHz</td>
+</tr>
+<tr>
+<td>Frequency</td>
+<td>915.0</td>
+</tr>
+<tr>
+<td>Satellite Node</td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Downlink (satellite → ground)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Radio Type</td>
+<td>RFM69</td>
+</tr>
+<tr>
+<td>Band</td>
+<td>915 MHz</td>
+</tr>
+<tr>
+<td>Frequency</td>
+<td>915.0</td>
+</tr>
+<tr>
+<td>Ground Node</td>
+<td><code>255</code></td>
+</tr>
+</tbody>
+</table>
+<p>Click <strong>Apply Configuration</strong>. The GS sends:</p>
+<pre><code>set_uplink_radio rfm69 915.0 0
+set_downlink_radio rfm69 915.0 255
+</code></pre>
+<p>This addresses ground transmissions to node <code>0</code> (your satellite) while the GS
+itself listens as node <code>255</code>. The FSW replies to whichever node sent the
+command, so responses come back to <code>255</code> automatically.</p>
+<p>See <a href="../ground-station/radio-config/">Radio Configuration</a> for the full panel
+reference.</p>
+<hr />
+<h2 id="5-confirm-the-link">5. Confirm the Link</h2>
+<p>From the ground station, send a command that needs no sensors:</p>
+<pre><code>GET_HOSTNAME
+</code></pre>
+<p>On the satellite console you should see the exchange:</p>
+<pre><code>  14:22:07  RX node 255  GET_HOSTNAME  → TX 15 bytes → node 255  OK
+</code></pre>
+<p>The ground station receives a <code>HOST</code> packet whose payload is <code>TEMPEST-0</code>
+padded to 11 bytes. If that round-trips, the link is up.</p>
+<p>Try one more with live data:</p>
+<pre><code>OBC_CPU
+</code></pre>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FSW exits with <code>ValueError: invalid literal for int()</code></td>
+<td>Hostname uses letter <code>O</code>, or has no <code>-N</code> suffix</td>
+<td><code>sudo hostnamectl set-hostname TEMPEST-0</code> and reboot</td>
+</tr>
+<tr>
+<td><code>Node</code> shows a value other than <code>0</code></td>
+<td>Hostname suffix isn't <code>0</code></td>
+<td>Rename the host; remember the suffix is multiplied by 10</td>
+</tr>
+<tr>
+<td><code>ValueError: Unsupported uplink radio type</code></td>
+<td><code>radio:</code> isn't <code>rfm69</code> or <code>rfm95</code></td>
+<td>Check spelling and case in <code>config.yml</code></td>
+</tr>
+<tr>
+<td>Settings revert after every restart</td>
+<td><code>config.yml.bak</code> still holds the old values</td>
+<td><code>cp config.yml config.yml.bak</code></td>
+</tr>
+<tr>
+<td>Startup shows RFM69 @ 915 but no packets arrive</td>
+<td>GS is on a different radio type, frequency, or node</td>
+<td>Re-apply step 4; mismatches fail silently</td>
+</tr>
+<tr>
+<td>Commands arrive but no response reaches the GS</td>
+<td>GS node doesn't match the address the FSW replies to</td>
+<td>Set the GS <strong>Ground Node</strong> to <code>255</code></td>
+</tr>
+<tr>
+<td>Nothing at all on either end</td>
+<td>RFM69 wiring / encryption mismatch</td>
+<td>Confirm <code>encryption: false</code> on both ends</td>
+</tr>
+</tbody>
+</table>
+<p>For more, see <a href="../reference/troubleshooting/">Troubleshooting</a>.</p>
+<hr />
+<h2 id="fleet-note">Fleet Note</h2>
+<p>Node addresses are <code>hostname_suffix × 10</code>, so a fleet reads:</p>
+<table>
+<thead>
+<tr>
+<th>Hostname</th>
+<th>Node</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TEMPEST-0</code></td>
+<td>0</td>
+</tr>
+<tr>
+<td><code>TEMPEST-1</code></td>
+<td>10</td>
+</tr>
+<tr>
+<td><code>TEMPEST-2</code></td>
+<td>20</td>
+</tr>
+<tr>
+<td><code>TEMPEST-25</code></td>
+<td>250</td>
+</tr>
+</tbody>
+</table>
+<p>Every unit in radio range needs a unique suffix — duplicates collide on the
+air. Note that <code>TEMPEST-0</code> and a GS ground node of <code>0</code> would also collide, so
+keep the ground station at <code>255</code>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../tempest_build_guide/" class="btn btn-neutral float-left" title="Building Your CubeSat"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../connecting_to_wifi/" class="btn btn-neutral float-right" title="Connecting to TEMPEST">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>&copy; 2024 ETHOS Labs, LLC</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../tempest_build_guide/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../connecting_to_wifi/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

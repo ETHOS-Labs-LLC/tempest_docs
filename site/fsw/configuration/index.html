@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="ETHOS Labs, LLC" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Configuration - TEMPEST Flight Software</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Configuration";
+        var mkdocs_page_input_path = "fsw/configuration.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> TEMPEST Flight Software
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Build Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_components/">TEMPEST Components Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_build_guide/">Building Your CubeSat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Quick Start: TEMPEST-0 on RFM69</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to TEMPEST</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Flight Software</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../commands/">Command Protocol</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../telemetry/">Telemetry Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../subsystems/">Subsystems</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sensor-mcu/">Sensor MCU (RP2040)</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Configuration</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#configyml">config.yml</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#structure">Structure</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#configuration-parameters">Configuration Parameters</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#uplink-ground-to-satellite">Uplink (Ground to Satellite)</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#downlink-satellite-to-ground">Downlink (Satellite to Ground)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#live-reload">Live Reload</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#backup-restoration">Backup Restoration</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#radio-hardware-configuration">Radio Hardware Configuration</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#spi-bus-assignments">SPI Bus Assignments</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#radio-sharing">Radio Sharing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ism-band-frequency-ranges">ISM Band Frequency Ranges</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#chunk-size-limits">Chunk Size Limits</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#node-addressing">Node Addressing</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Ground Station</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/interface/">WebSerial Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/packet-parsing/">Packet Parsing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/image-transfer/">Image Transfer</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/radio-config/">Radio Configuration</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/telemetry-ids/">Telemetry ID Quick Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/packet-sizes/">Packet Size Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">TEMPEST Flight Software</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Flight Software</li>
+      <li class="breadcrumb-item active">Configuration</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="configuration">Configuration</h1>
+<h2 id="configyml">config.yml</h2>
+<p>The FSW reads its configuration from <code>config.yml</code> in the project root. This file controls radio parameters and is monitored for live changes via the <code>watchdog</code> library.</p>
+<h3 id="structure">Structure</h3>
+<pre><code class="language-yaml">Tempest:
+  Comms:
+    uplink:
+      radio: rfm69           # rfm69 or rfm95
+      freq: 915              # Frequency in MHz
+      encryption: false
+      enc_key: &quot;&quot;
+
+    downlink:
+      radio: rfm69           # rfm69 or rfm95
+      freq: 915              # Frequency in MHz
+      chunk_sizes:
+        rfm95: 240            # Max payload bytes for RFM95
+        rfm69: 50             # Max payload bytes for RFM69
+      encryption: false
+      enc_key: &quot;&quot;
+
+    crosslink:
+      radio: &quot;none&quot;           # Future feature
+      frequency: 921
+      encryption: false
+      enc_key: &quot;&quot;
+</code></pre>
+<h3 id="configuration-parameters">Configuration Parameters</h3>
+<h4 id="uplink-ground-to-satellite">Uplink (Ground to Satellite)</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>radio</code></td>
+<td>string</td>
+<td>Radio module type: <code>rfm69</code> or <code>rfm95</code></td>
+</tr>
+<tr>
+<td><code>freq</code></td>
+<td>number</td>
+<td>Operating frequency in MHz</td>
+</tr>
+<tr>
+<td><code>encryption</code></td>
+<td>boolean</td>
+<td>Enable AES encryption</td>
+</tr>
+<tr>
+<td><code>enc_key</code></td>
+<td>string</td>
+<td>16-byte AES encryption key</td>
+</tr>
+</tbody>
+</table>
+<h4 id="downlink-satellite-to-ground">Downlink (Satellite to Ground)</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>radio</code></td>
+<td>string</td>
+<td>Radio module type: <code>rfm69</code> or <code>rfm95</code></td>
+</tr>
+<tr>
+<td><code>freq</code></td>
+<td>number</td>
+<td>Operating frequency in MHz</td>
+</tr>
+<tr>
+<td><code>chunk_sizes.rfm95</code></td>
+<td>number</td>
+<td>Max payload size for RFM95 (default 240)</td>
+</tr>
+<tr>
+<td><code>chunk_sizes.rfm69</code></td>
+<td>number</td>
+<td>Max payload size for RFM69 (default 50)</td>
+</tr>
+<tr>
+<td><code>encryption</code></td>
+<td>boolean</td>
+<td>Enable AES encryption</td>
+</tr>
+<tr>
+<td><code>enc_key</code></td>
+<td>string</td>
+<td>16-byte AES encryption key</td>
+</tr>
+</tbody>
+</table>
+<h3 id="live-reload">Live Reload</h3>
+<p>The FSW uses <code>watchdog.observers.Observer</code> with a <code>FileSystemEventHandler</code> to detect changes to <code>config.yml</code>. When modified:</p>
+<ol>
+<li>The watchdog triggers a reload callback</li>
+<li>New configuration is parsed from YAML</li>
+<li>Radio parameters are updated without restarting the service</li>
+</ol>
+<h3 id="backup-restoration">Backup Restoration</h3>
+<p>On startup, <code>config.yml.bak</code> is copied over <code>config.yml</code> to ensure a known-good configuration. This prevents a corrupted config from bricking the satellite after a reboot.</p>
+<pre><code>Startup: config.yml.bak → config.yml → parse → initialize radios
+</code></pre>
+<h2 id="radio-hardware-configuration">Radio Hardware Configuration</h2>
+<h3 id="spi-bus-assignments">SPI Bus Assignments</h3>
+<p>The FSW uses two SPI buses for dual-radio operation:</p>
+<p><strong>Primary SPI (Hardware):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>GPIO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SCLK</td>
+<td>21</td>
+</tr>
+<tr>
+<td>MOSI</td>
+<td>20</td>
+</tr>
+<tr>
+<td>MISO</td>
+<td>19</td>
+</tr>
+<tr>
+<td>CS</td>
+<td>5</td>
+</tr>
+<tr>
+<td>RESET</td>
+<td>17</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Secondary SPI (Bitbanged):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>GPIO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SCLK</td>
+<td>21</td>
+</tr>
+<tr>
+<td>MOSI</td>
+<td>20</td>
+</tr>
+<tr>
+<td>MISO</td>
+<td>19</td>
+</tr>
+<tr>
+<td>CS</td>
+<td>6</td>
+</tr>
+<tr>
+<td>RESET</td>
+<td>26</td>
+</tr>
+</tbody>
+</table>
+<h3 id="radio-sharing">Radio Sharing</h3>
+<p>If both uplink and downlink are configured to use the same radio type (e.g., both <code>rfm69</code>), they share a single radio instance. This means communication is half-duplex — the satellite cannot transmit and receive simultaneously.</p>
+<h3 id="ism-band-frequency-ranges">ISM Band Frequency Ranges</h3>
+<table>
+<thead>
+<tr>
+<th>Band</th>
+<th>Min (MHz)</th>
+<th>Max (MHz)</th>
+<th>Region</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>433</td>
+<td>433.05</td>
+<td>434.79</td>
+<td>Global</td>
+</tr>
+<tr>
+<td>868</td>
+<td>863.0</td>
+<td>870.0</td>
+<td>EU</td>
+</tr>
+<tr>
+<td>915</td>
+<td>902.0</td>
+<td>928.0</td>
+<td>US</td>
+</tr>
+</tbody>
+</table>
+<h3 id="chunk-size-limits">Chunk Size Limits</h3>
+<p>These limits account for the radio FIFO size and the Adafruit library header:</p>
+<table>
+<thead>
+<tr>
+<th>Radio</th>
+<th>FIFO Size</th>
+<th>Library Header</th>
+<th>Usable Payload</th>
+<th>Config Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RFM69</td>
+<td>66 bytes</td>
+<td>4 bytes</td>
+<td>62 bytes</td>
+<td>50 bytes</td>
+</tr>
+<tr>
+<td>RFM95</td>
+<td>252 bytes</td>
+<td>4 bytes</td>
+<td>248 bytes</td>
+<td>240 bytes</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>\n</code> delimiter appended by <code>radio.py</code> consumes 1 additional byte from the usable payload.</p>
+<h2 id="node-addressing">Node Addressing</h2>
+<p>Radio node addresses identify the sender and destination:</p>
+<ul>
+<li><strong>Default:</strong> 0xFF (255) broadcast</li>
+<li><strong>FSW Node ID:</strong> Derived from hostname: <code>int(hostname[-2:]) * 10</code></li>
+<li><strong>Ground Station Node:</strong> Configurable via the ground station interface</li>
+</ul>
+<p><img alt="Placeholder: Radio module SPI wiring on Pi Zero" src="../img/placeholder-radio-wiring.png" /></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../sensor-mcu/" class="btn btn-neutral float-left" title="Sensor MCU (RP2040)"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../installation/" class="btn btn-neutral float-right" title="Installation">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>&copy; 2024 ETHOS Labs, LLC</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../sensor-mcu/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../installation/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

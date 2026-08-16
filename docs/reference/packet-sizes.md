@@ -35,6 +35,7 @@ All sizes include the 4-byte identifier but exclude the `\n` appended by `radio.
 | OBCR | 8 | Yes | Yes |
 | OBCD | 8 | Yes | Yes |
 | HOST | 15 | Yes | Yes |
+| WIFI | 51 | Yes | Yes |
 | BECN | 24 | Yes | Yes |
 | XFRC | 8 | Yes | Yes |
 

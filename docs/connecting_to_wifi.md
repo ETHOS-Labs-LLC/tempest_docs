@@ -1,119 +1,149 @@
-# How to connect TEMPEST to your Wi-Fi Network?
+# Connecting to Your TEMPEST CubeSat
 
-When you received your TEMPEST CubeSat, it was preconfigured to connect to the ETHOS Labs Wi-Fi network used in class. While you could recreate that network at home, it would be easier to have TEMPEST connect to your own Wi-Fi network.
+The TEMPEST image ships pre-provisioned: instead of joining an external wifi
+network, each Pi Zero W broadcasts its own WiFi Access Point that workshop
+attendees connect to directly. For a fleet of 25 units, you'll see
+`TEMPEST-1` through `TEMPEST-25` advertised on the air — one SSID per
+satellite, matching its hostname.
 
-The TEMPEST Flight Software (FSW) is running on a minimal Pi OS installation based on Bookworm. As a result, some of the legacy methods of easily configuring Wi-Fi on an existing image no longer work. 
+## Connecting from Your Laptop
 
-As a result, the simplest way of getting your TEMPEST CubeSat to connect to your wireless network is to re-image your microSD card with the TEMPEST image using ```Raspberry Pi Imager``` and setting the appropriate values for your network.
+1. Open your laptop's wifi settings.
+2. Find the SSID matching the TEMPEST unit you want to use (e.g. `TEMPEST-3`).
+3. Join using the shared workshop key: **`Hack Space`** (default — your
+   instructor may have rotated it).
+4. NetworkManager on the Pi runs DHCP + NAT in `shared` mode, so your laptop
+   automatically picks up a lease in the `10.42.0.0/24` range.
+5. SSH into the satellite at its AP gateway address:
+    ```bash
+    ssh tempest@10.42.0.1
+    ```
+    Default SSH credentials: `tempest` / `tempest`. Note that these are *not*
+    the WiFi key — the AP password (`Hack Space`) gets you onto the network,
+    the login above gets you a shell.
 
-Raspberry Pi Imager is a cross-platform solution for creating bootable media for Raspberry Pi and has built-in customization options.
+The Pi Zero W has a single radio, so each TEMPEST is its own isolated network —
+you can only be connected to one satellite at a time.
 
-You will need to download and install [```Raspberry Pi Imager```](https://www.raspberrypi.com/software/) for your appropriate operating system.
+## Rotating the AP Password
 
-Once you have installed the software, you will need to download the TEMPEST image from the following link: [TEMPEST.img](https://drive.google.com/file/d/16SGQCWLUIjtlwZIXOSr-qfHSSttaX5Ga/view?usp=sharing).
+Once SSH'd in, change the PSK with:
 
-After downloading the image, you can check if the image is valid by generating SHA256 hash and comparing it to this value:
+```bash
+sudo nmcli con modify tempest-ap wifi-sec.psk "new-password-here"
+sudo nmcli con down tempest-ap && sudo nmcli con up tempest-ap
+```
 
- ```SHA256: B2B9A818FDA788B5C86BDEE69779F2D6651D71A360475ECEBFF68F761082B62E```.
+The down/up cycle is required — modifying the connection alone does not push
+the new key to the running AP. Every connected client (including your current
+SSH session) drops and must reconnect with the new key.
 
- OR
+To check what the current PSK is set to (run as root for `-s`):
 
- For TEMPEST v1.1, you can obtain the image here: [Tempest_v1.1.img](https://drive.google.com/file/d/1K1Nw7Q_Xnd-AX9t3xWBUItROa7UGI167/view?usp=drive_link)
+```bash
+sudo nmcli -s con show tempest-ap | grep 802-11-wireless-security.psk:
+```
 
- ```SHA256: 1b8bcd935839535602cd83294fcc94d98414a8966752e596f9455d1c1249bfef```.
+## Querying the AP Over Radio
 
-Next you will want to take your microSD card out of TEMPEST by unscrewing the four T8 screws holding the X+ Solar Panel on the frame. If you do not know which panel is the X+ panel, if you are looking at the charging port/RBF pin panel, it will be on your left.
+If the satellite is in radio range but you can't see its SSID for any reason,
+the ground station can ask the FSW directly:
 
-Once you open the panel, you can remove the microSD card from the onboard Raspberry Pi Zero W located on the bottom side of the lower PCB.
+```
+WIFI_INFO
+```
 
-Next, connect the microSD card to your computer where you installed ```Raspberry Pi Imager```.
+The satellite responds with a `WIFI` telemetry packet containing the active
+SSID (32 bytes) and IPv4 address (15 bytes). See
+[Command Protocol](fsw/commands.md) and the
+[Telemetry Reference](fsw/telemetry.md#wifi-wifi-access-point-info).
 
-Open ```Raspberry Pi Imager``` and select the ```CHOOSE OS``` option in the middle of the screen as shown below.
+## Imaging a Fresh microSD Card
 
-![alt text](image.png)
+If you're setting up a new TEMPEST from scratch (e.g. replacing a damaged SD
+card or upgrading the image), use `Raspberry Pi Imager`:
 
-A new window will open, and you will need to scroll all the way to the bottom of the window and select the option ```Use custom```.
+1. Download and install
+   [Raspberry Pi Imager](https://www.raspberrypi.com/software/) for your OS.
+2. Download a TEMPEST image:
+    - TEMPEST v1.1:
+      [Tempest_v1.1.img](https://drive.google.com/file/d/1K1Nw7Q_Xnd-AX9t3xWBUItROa7UGI167/view?usp=drive_link)
+      — `SHA256: 1b8bcd935839535602cd83294fcc94d98414a8966752e596f9455d1c1249bfef`
+3. Take the microSD card out of TEMPEST by removing the four T8 screws on the
+   X+ Solar Panel (the panel to your left when facing the RBF pin / charging
+   port).
+4. In `Raspberry Pi Imager`, choose **`CHOOSE OS` → `Use custom`** and select
+   the downloaded `.img` file, then choose your microSD card under
+   **`CHOOSE STORAGE`**.
 
-![alt text](image-1.png)
+    ![Choose OS in Raspberry Pi Imager](image.png)
+    ![Use custom](image-1.png)
+    ![Select image file](image-2.png)
+    ![Choose storage](image-3.png)
+    ![Select microSD card](image-4.png)
+    ![Click Next](image-5.png)
 
-After clicking on the ```Use custom``` option, your operating system's file browser will open up where you will be able to navigate to where you downloaded the ```Tempest.img``` file and select it.
+5. Click **`NEXT`**, then **`EDIT SETTINGS`**.
 
-![alt text](image-2.png)
+    ![Edit settings](image-6.png)
 
-Then select the ```CHOOSE STORAGE``` option on the right side of the GUI as shown in the image below.
+6. Configure the customizations. The image ships with the AP, SSH, and the
+   FSW already provisioned — you only need to set the hostname:
+    - **Hostname**: set to `TEMPEST-N` where `N` is a unique integer in your
+      fleet (1–25). This is **critical**: the FSW derives the radio node
+      address from the integer at the end of the hostname
+      (`int(hostname.split("-")[1]) * 10`), so two units with the same
+      hostname will collide on the air. Make sure every TEMPEST in your fleet
+      has a different `N`.
 
-![alt text](image-3.png)
+        ![Hostname](image-7.png)
+        ![Set hostname value](image-8.png)
 
-You will now want to select your microSD card that is connected to your computer. If you are using the card that came with TEMPEST, it will say ```31.0 GB``` but the name of the Card/Device will be different than what is shown below. If you have more than one storage device showing, make sure you select the correct one.
+    - **Username/password**: leave at defaults (`tempest` / `tempest`).
+      If you change the username here, that's fine — `install.sh` records
+      the FSW directory by absolute path when it builds the service unit, so
+      the service works under any home directory. The username itself isn't
+      hardcoded anywhere in the FSW.
 
-![alt text](image-4.png)
+        ![Username and password](image-9.png)
 
-With your storage device chosen, you can now click ```NEXT``` in ```Raspberry Pi Imager```.
+    - **WiFi / SSH**: skip these. The image is already configured to broadcast
+      the `tempest-ap` access point on first boot and SSH is already enabled.
+      Do not provide an external wifi SSID — the Pi Zero W has a single radio
+      and a configured client network can prevent the AP from coming up.
 
-![alt text](image-5.png)
+7. **`SAVE`** the customizations, then **`YES`** to apply, then **`YES`** to
+   confirm overwriting the card.
 
-A new window will open up and on the far-left side you will find the option to ```EDIT SETTINGS```. Click on that option and a new window will open.
+    ![Save customizations](image-12.png)
+    ![Apply customizations](image-13.png)
+    ![Confirm overwrite](image-14.png)
 
-![alt text](image-6.png)
+8. Wait for `Raspberry Pi Imager` to write and verify the image.
 
-In the new window you will have options to customize your TEMPEST installation such as hostname and wireless network.
+    ![Writing](image-15.png)
+    ![Write complete](image-16.png)
 
-![alt text](image-7.png)
+9. Eject the microSD card, reinstall it in the Pi Zero W, and power the
+   satellite up. The Pi will shut down after ~30 seconds on first boot
+   — this is expected. Insert and remove the RBF pin to reboot it.
+10. After a few minutes the AP will be live. Look for the `tempest-ap` SSID
+    (matching the hostname you set, e.g. `TEMPEST-3`) from your laptop and
+    follow the [Connecting from Your Laptop](#connecting-from-your-laptop)
+    steps above.
 
-Changing the hostname is completely optional, and if you do not change it, it will be ```TEMPEST```.
+## Recovering an Unreachable Unit
 
-![alt text](image-8.png)
+If a satellite's AP is misconfigured or you've forgotten the PSK and can't
+SSH in:
 
-Likewise, it is not required to change the username and password, and it is recommended you use the defaults by making use ```Set username and password``` are unchecked. You can also manually set the username and password to the defaults using: ```ethos:hack ethos```.
+1. Power the Pi off, pull the microSD card, and mount it on your laptop.
+2. Edit
+   `/etc/NetworkManager/system-connections/tempest-ap.nmconnection` — adjust
+   the `ssid` or `psk` field directly.
+3. Reinsert the card and boot the Pi.
 
-![alt text](image-9.png)
-
-The next section is the Wi-Fi section, and you will certainly want to complete this section by providing your wireless network SSID and password. Also, double check your ```Wireless LAN Country``` code is correct. The image is set to the ```US```.
-
-![alt text](image-10.png)
-
-After setting your Wi-Fi information, you will want to click on the ```Services``` tab and make sure ```Enable SSH``` is clicked as well as ```Use password authentication``` is checked.
-
-![alt text](image-11.png)
-
-Once you have enabled ```SSH``` you can click on the ```SAVE``` button located at the bottom of the window.
-
-![alt text](image-12.png)
-
-Clicking ```SAVE``` will take you back to the OS customization window where you will want to click on ```YES``` to apply the custom settings to your image.
-
-![alt text](image-13.png)
-
-A warning window will open informing you that all data on the selected storage device will be erased. Click on ```YES```.
-
-![alt text](image-14.png)
-
-```Raspberry Pi Imager``` will then write the customized TEMPEST image. 
-
-![alt text](image-15.png)
-
-Once the write operation is complete, the image will be verified and once that process is done a window will popup stating ```Write Successful``` and that you can remove the microSD card from your computer. Click ```CONTINUE``` to acknowledge.
-
-![alt text](image-16.png)
-
-Now you can remove the microSD card from your computer and reinstall it in TEMPEST. 
-
-Next, power up TEMPEST and it will boot into the new image. However, after booting up, the onboard Raspberry Pi Zero W will shut down after about 30 seconds. This is expected behavior, and you can reboot it simply by inserting your RBF pin and then removing it once again. 
-
-It is suggested that you power up TEMPEST without securing the X+ panel so that you can see the green LED indicator on the Pi. Once it has shut down and you reboot it, you can then secure the panel back on using the four T8 screws you previously removed.
-
-One the second boot, it will take upwards of 8-10 minutes for the system to full boot and connect to your Wi-Fi network. Again, this is expected behavior, so just be patient.
-
-Once the Pi is fully booted, the FSW will automatically start running and will be signaled by a tone from the onboard buzzer. 
-
-The FSW will more than likely be running before the entire network stack is up and running, so you may not see TEMPEST on your network for several more minutes, so just be patient. 
-
-After about 10 minutes, your TEMPEST CubeSat should be up as a device on your network, and you typically can retrieve the IP address by looking at your network’s DHCP leases. 
-
-After getting the IP address of your TEMPEST CubeSat, you will be able to SSH into it with the default credentials, or the ones you set when creating the microSD card.
-
-
-
-
-
-
+Alternatively, with physical access to the Pi (USB OTG keyboard + a USB→HDMI
+adapter), log in directly on the console and run the `nmcli con modify`
+commands from the [Rotating the AP Password](#rotating-the-ap-password)
+section above.

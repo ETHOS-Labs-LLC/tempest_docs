@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="ETHOS Labs, LLC" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Telemetry Reference - TEMPEST Flight Software</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Telemetry Reference";
+        var mkdocs_page_input_path = "fsw/telemetry.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> TEMPEST Flight Software
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Build Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_components/">TEMPEST Components Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_build_guide/">Building Your CubeSat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Quick Start: TEMPEST-0 on RFM69</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to TEMPEST</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Flight Software</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../commands/">Command Protocol</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Telemetry Reference</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#packet-structure">Packet Structure</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#binary-packing">Binary Packing</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#telemetry-packet-definitions">Telemetry Packet Definitions</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#gyro-gyroscope">GYRO — Gyroscope</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#accl-accelerometer">ACCL — Accelerometer</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#magn-magnetometer">MAGN — Magnetometer</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#grav-gravity-vector">GRAV — Gravity Vector</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#eulr-euler-angles">EULR — Euler Angles</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#bme2-bme280-environmental">BME2 — BME280 Environmental</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#temp-temperature-imu">TEMP — Temperature (IMU)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#quat-quaternion">QUAT — Quaternion</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#adcs-attitude-determination">ADCS — Attitude Determination</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#solr-solar-panels">SOLR — Solar Panels</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#epss-eps-status">EPSS — EPS Status</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#obcc-obcr-obcd-obc-single-values">OBCC / OBCR / OBCD — OBC Single Values</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#host-hostname">HOST — Hostname</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#wifi-wifi-access-point-info">WIFI — WiFi Access Point Info</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#becn-health-beacon">BECN — Health Beacon</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#xfrc-transfer-complete">XFRC — Transfer Complete</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#obcp-obcl-chunked-text-data">OBCP / OBCL — Chunked Text Data</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#send-image-data-packet">SEND — Image Data Packet</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#phot-photo-response">PHOT — Photo Response</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../subsystems/">Subsystems</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sensor-mcu/">Sensor MCU (RP2040)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Ground Station</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/interface/">WebSerial Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/packet-parsing/">Packet Parsing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/image-transfer/">Image Transfer</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/radio-config/">Radio Configuration</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/telemetry-ids/">Telemetry ID Quick Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/packet-sizes/">Packet Size Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">TEMPEST Flight Software</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Flight Software</li>
+      <li class="breadcrumb-item active">Telemetry Reference</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="telemetry-reference">Telemetry Reference</h1>
+<h2 id="packet-structure">Packet Structure</h2>
+<p>All downlink telemetry packets share a common format:</p>
+<pre><code>[4-byte ASCII identifier][payload bytes][\n]
+</code></pre>
+<p>The <code>\n</code> newline is appended by <code>radio.py</code> during transmission and serves as a packet delimiter. It is not part of the logical payload.</p>
+<h2 id="binary-packing">Binary Packing</h2>
+<p>Telemetry payloads are packed using Python's <code>struct.pack</code> with little-endian byte order:</p>
+<table>
+<thead>
+<tr>
+<th>Format Code</th>
+<th>Type</th>
+<th>Size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>s</code></td>
+<td>char (ASCII string)</td>
+<td>1 byte each</td>
+</tr>
+<tr>
+<td><code>i</code></td>
+<td>signed int32</td>
+<td>4 bytes</td>
+</tr>
+<tr>
+<td><code>I</code></td>
+<td>unsigned int32</td>
+<td>4 bytes</td>
+</tr>
+<tr>
+<td><code>f</code></td>
+<td>float32 (IEEE 754)</td>
+<td>4 bytes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="telemetry-packet-definitions">Telemetry Packet Definitions</h2>
+<h3 id="gyro-gyroscope">GYRO — Gyroscope</h3>
+<pre><code>struct.pack('4s3f', b'GYRO', x, y, z)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Offset</th>
+<th>Size</th>
+<th>Type</th>
+<th>Field</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>4</td>
+<td>char[4]</td>
+<td>Identifier</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4</td>
+<td>4</td>
+<td>float</td>
+<td>X</td>
+<td>°/s</td>
+</tr>
+<tr>
+<td>8</td>
+<td>4</td>
+<td>float</td>
+<td>Y</td>
+<td>°/s</td>
+</tr>
+<tr>
+<td>12</td>
+<td>4</td>
+<td>float</td>
+<td>Z</td>
+<td>°/s</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total: 16 bytes</strong></p>
+<h3 id="accl-accelerometer">ACCL — Accelerometer</h3>
+<p>Same format as GYRO. Units: m/s².</p>
+<h3 id="magn-magnetometer">MAGN — Magnetometer</h3>
+<p>Same format as GYRO. Units: µT (microtesla).</p>
+<h3 id="grav-gravity-vector">GRAV — Gravity Vector</h3>
+<p>Same format as GYRO. Units: m/s².</p>
+<h3 id="eulr-euler-angles">EULR — Euler Angles</h3>
+<p>Same format as GYRO. Units: degrees (°).</p>
+<h3 id="bme2-bme280-environmental">BME2 — BME280 Environmental</h3>
+<pre><code>struct.pack('4s3f', b'BME2', temperature, pressure, altitude)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Offset</th>
+<th>Size</th>
+<th>Type</th>
+<th>Field</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>4</td>
+<td>char[4]</td>
+<td>Identifier</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4</td>
+<td>4</td>
+<td>float</td>
+<td>Temperature</td>
+<td>°C</td>
+</tr>
+<tr>
+<td>8</td>
+<td>4</td>
+<td>float</td>
+<td>Pressure</td>
+<td>hPa</td>
+</tr>
+<tr>
+<td>12</td>
+<td>4</td>
+<td>float</td>
+<td>Altitude</td>
+<td>m</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total: 16 bytes</strong></p>
+<h3 id="temp-temperature-imu">TEMP — Temperature (IMU)</h3>
+<pre><code>struct.pack('4si', b'TEMP', temperature)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Offset</th>
+<th>Size</th>
+<th>Type</th>
+<th>Field</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>4</td>
+<td>char[4]</td>
+<td>Identifier</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4</td>
+<td>4</td>
+<td>int32</td>
+<td>Temperature</td>
+<td>°C</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total: 8 bytes</strong></p>
+<h3 id="quat-quaternion">QUAT — Quaternion</h3>
+<pre><code>struct.pack('4s4f', b'QUAT', w, x, y, z)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Offset</th>
+<th>Size</th>
+<th>Type</th>
+<th>Field</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>4</td>
+<td>char[4]</td>
+<td>Identifier</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4</td>
+<td>4</td>
+<td>float</td>
+<td>W</td>
+<td>—</td>
+</tr>
+<tr>
+<td>8</td>
+<td>4</td>
+<td>float</td>
+<td>X</td>
+<td>—</td>
+</tr>
+<tr>
+<td>12</td>
+<td>4</td>
+<td>float</td>
+<td>Y</td>
+<td>—</td>
+</tr>
+<tr>
+<td>16</td>
+<td>4</td>
+<td>float</td>
+<td>Z</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total: 20 bytes</strong></p>
+<h3 id="adcs-attitude-determination">ADCS — Attitude Determination</h3>
+<pre><code>struct.pack('4s7f', b'ADCS', heading, roll, pitch, quat_w, quat_x, quat_y, quat_z)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Offset</th>
+<th>Size</th>
+<th>Type</th>
+<th>Field</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>4</td>
+<td>char[4]</td>
+<td>Identifier</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4</td>
+<td>4</td>
+<td>float</td>
+<td>Heading</td>
+<td>°</td>
+</tr>
+<tr>
+<td>8</td>
+<td>4</td>
+<td>float</td>
+<td>Roll</td>
+<td>°</td>
+</tr>
+<tr>
+<td>12</td>
+<td>4</td>
+<td>float</td>
+<td>Pitch</td>
+<td>°</td>
+</tr>
+<tr>
+<td>16</td>
+<td>4</td>
+<td>float</td>
+<td>Quat W</td>
+<td>—</td>
+</tr>
+<tr>
+<td>20</td>
+<td>4</td>
+<td>float</td>
+<td>Quat X</td>
+<td>—</td>
+</tr>
+<tr>
+<td>24</td>
+<td>4</td>
+<td>float</td>
+<td>Quat Y</td>
+<td>—</td>
+</tr>
+<tr>
+<td>28</td>
+<td>4</td>
+<td>float</td>
+<td>Quat Z</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total: 32 bytes</strong></p>
+<h3 id="solr-solar-panels">SOLR — Solar Panels</h3>
+<pre><code>struct.pack('4s8f', b'SOLR', v1, i1, v2, i2, v3, i3, v4, i4)
+</code></pre>
+<p>Panel order matches INA219 addresses:</p>
+<table>
+<thead>
+<tr>
+<th>Index</th>
+<th>Address</th>
+<th>Panel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0x40</td>
+<td>X-</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0x41</td>
+<td>X+</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0x44</td>
+<td>Y+</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0x45</td>
+<td>Y-</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Offset</th>
+<th>Size</th>
+<th>Type</th>
+<th>Field</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>4</td>
+<td>char[4]</td>
+<td>Identifier</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4</td>
+<td>4</td>
+<td>float</td>
+<td>Panel 1 Voltage</td>
+<td>V</td>
+</tr>
+<tr>
+<td>8</td>
+<td>4</td>
+<td>float</td>
+<td>Panel 1 Current</td>
+<td>mA</td>
+</tr>
+<tr>
+<td>12</td>
+<td>4</td>
+<td>float</td>
+<td>Panel 2 Voltage</td>
+<td>V</td>
+</tr>
+<tr>
+<td>16</td>
+<td>4</td>
+<td>float</td>
+<td>Panel 2 Current</td>
+<td>mA</td>
+</tr>
+<tr>
+<td>20</td>
+<td>4</td>
+<td>float</td>
+<td>Panel 3 Voltage</td>
+<td>V</td>
+</tr>
+<tr>
+<td>24</td>
+<td>4</td>
+<td>float</td>
+<td>Panel 3 Current</td>
+<td>mA</td>
+</tr>
+<tr>
+<td>28</td>
+<td>4</td>
+<td>float</td>
+<td>Panel 4 Voltage</td>
+<td>V</td>
+</tr>
+<tr>
+<td>32</td>
+<td>4</td>
+<td>float</td>
+<td>Panel 4 Current</td>
+<td>mA</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total: 36 bytes</strong></p>
+<h3 id="epss-eps-status">EPSS — EPS Status</h3>
+<pre><code>struct.pack('4s5if', b'EPSS', error, ch1, ch2, ch3, ch4, battery_voltage)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Offset</th>
+<th>Size</th>
+<th>Type</th>
+<th>Field</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>4</td>
+<td>char[4]</td>
+<td>Identifier</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4</td>
+<td>4</td>
+<td>int32</td>
+<td>Error Code</td>
+<td>—</td>
+</tr>
+<tr>
+<td>8</td>
+<td>4</td>
+<td>int32</td>
+<td>Channel 1</td>
+<td>0=OFF, 1=ON</td>
+</tr>
+<tr>
+<td>12</td>
+<td>4</td>
+<td>int32</td>
+<td>Channel 2</td>
+<td>0=OFF, 1=ON</td>
+</tr>
+<tr>
+<td>16</td>
+<td>4</td>
+<td>int32</td>
+<td>Channel 3</td>
+<td>0=OFF, 1=ON</td>
+</tr>
+<tr>
+<td>20</td>
+<td>4</td>
+<td>int32</td>
+<td>Channel 4</td>
+<td>0=OFF, 1=ON</td>
+</tr>
+<tr>
+<td>24</td>
+<td>4</td>
+<td>float</td>
+<td>Battery Voltage</td>
+<td>V</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total: 28 bytes</strong></p>
+<h3 id="obcc-obcr-obcd-obc-single-values">OBCC / OBCR / OBCD — OBC Single Values</h3>
+<pre><code>struct.pack('4sf', b'OBCC', value)  # CPU, RAM, or Disk
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Offset</th>
+<th>Size</th>
+<th>Type</th>
+<th>Field</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>4</td>
+<td>char[4]</td>
+<td>Identifier</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4</td>
+<td>4</td>
+<td>float</td>
+<td>Usage</td>
+<td>%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total: 8 bytes</strong></p>
+<h3 id="host-hostname">HOST — Hostname</h3>
+<pre><code>struct.pack('4s11s', b'HOST', hostname_bytes)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Offset</th>
+<th>Size</th>
+<th>Type</th>
+<th>Field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>4</td>
+<td>char[4]</td>
+<td>Identifier</td>
+</tr>
+<tr>
+<td>4</td>
+<td>11</td>
+<td>char[11]</td>
+<td>Hostname (null-padded)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total: 15 bytes</strong></p>
+<h3 id="wifi-wifi-access-point-info">WIFI — WiFi Access Point Info</h3>
+<pre><code>struct.pack('4s32s15s', b'WIFI', ssid_bytes, ip_bytes)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Offset</th>
+<th>Size</th>
+<th>Type</th>
+<th>Field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>4</td>
+<td>char[4]</td>
+<td>Identifier</td>
+</tr>
+<tr>
+<td>4</td>
+<td>32</td>
+<td>char[32]</td>
+<td>SSID (space-padded UTF-8)</td>
+</tr>
+<tr>
+<td>36</td>
+<td>15</td>
+<td>char[15]</td>
+<td>IPv4 address (space-padded ASCII, e.g. <code>10.42.0.1</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total: 51 bytes</strong></p>
+<p>SSID is queried from the active NetworkManager wifi connection and falls back to the system hostname. IP is the first address reported by <code>hostname -I</code> (the AP gateway on the <code>tempest-ap</code> profile is typically <code>10.42.0.1</code>).</p>
+<h3 id="becn-health-beacon">BECN — Health Beacon</h3>
+<pre><code>struct.pack('4sIffff', b'BECN', uptime, cpu, ram, disk, temp)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Offset</th>
+<th>Size</th>
+<th>Type</th>
+<th>Field</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>4</td>
+<td>char[4]</td>
+<td>Identifier</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4</td>
+<td>4</td>
+<td>uint32</td>
+<td>Uptime</td>
+<td>seconds</td>
+</tr>
+<tr>
+<td>8</td>
+<td>4</td>
+<td>float</td>
+<td>CPU Usage</td>
+<td>%</td>
+</tr>
+<tr>
+<td>12</td>
+<td>4</td>
+<td>float</td>
+<td>RAM Usage</td>
+<td>%</td>
+</tr>
+<tr>
+<td>16</td>
+<td>4</td>
+<td>float</td>
+<td>Disk Usage</td>
+<td>%</td>
+</tr>
+<tr>
+<td>20</td>
+<td>4</td>
+<td>float</td>
+<td>Temperature</td>
+<td>°C</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total: 24 bytes</strong></p>
+<h3 id="xfrc-transfer-complete">XFRC — Transfer Complete</h3>
+<pre><code>struct.pack('4sI', b'XFRC', total_packets)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Offset</th>
+<th>Size</th>
+<th>Type</th>
+<th>Field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>4</td>
+<td>char[4]</td>
+<td>Identifier</td>
+</tr>
+<tr>
+<td>4</td>
+<td>4</td>
+<td>uint32</td>
+<td>Total Packets</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total: 8 bytes</strong></p>
+<h3 id="obcp-obcl-chunked-text-data">OBCP / OBCL — Chunked Text Data</h3>
+<p>These are variable-length, multi-packet responses. Each chunk:</p>
+<pre><code>[4-byte ID][text data up to (chunk_size - 5) bytes]
+</code></pre>
+<p>The ground station accumulates chunks and flushes after 1 second of no new data.</p>
+<h3 id="send-image-data-packet">SEND — Image Data Packet</h3>
+<pre><code>SEND[base64_data][total_chunks:04d][current_chunk:04d]
+</code></pre>
+<p>Image packets are text-based (not binary struct). See <a href="../../ground-station/image-transfer/">Image Transfer</a>.</p>
+<h3 id="phot-photo-response">PHOT — Photo Response</h3>
+<pre><code>struct.pack('4sI', b'PHOT', filename_length) + filename_bytes
+</code></pre>
+<p>Variable length. Contains the filename of the captured image.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../commands/" class="btn btn-neutral float-left" title="Command Protocol"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../subsystems/" class="btn btn-neutral float-right" title="Subsystems">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>&copy; 2024 ETHOS Labs, LLC</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../commands/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../subsystems/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

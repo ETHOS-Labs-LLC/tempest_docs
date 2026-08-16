@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="ETHOS Labs, LLC" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Command Protocol - TEMPEST Flight Software</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Command Protocol";
+        var mkdocs_page_input_path = "fsw/commands.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> TEMPEST Flight Software
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Build Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_components/">TEMPEST Components Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tempest_build_guide/">Building Your CubeSat</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Quick Start: TEMPEST-0 on RFM69</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to TEMPEST</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Flight Software</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../architecture/">Architecture</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Command Protocol</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#command-format">Command Format</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#environmental-sensor-commands">Environmental Sensor Commands</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#onboard-computer-commands">Onboard Computer Commands</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#power-system-commands">Power System Commands</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#payload-commands">Payload Commands</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#beacon-commands">Beacon Commands</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#multi-packet-responses">Multi-Packet Responses</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#paced-image-transfer">Paced Image Transfer</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../telemetry/">Telemetry Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../subsystems/">Subsystems</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../sensor-mcu/">Sensor MCU (RP2040)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Ground Station</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/interface/">WebSerial Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/packet-parsing/">Packet Parsing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/image-transfer/">Image Transfer</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ground-station/radio-config/">Radio Configuration</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/telemetry-ids/">Telemetry ID Quick Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/packet-sizes/">Packet Size Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">TEMPEST Flight Software</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Flight Software</li>
+      <li class="breadcrumb-item active">Command Protocol</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="command-protocol">Command Protocol</h1>
+<h2 id="overview">Overview</h2>
+<p>Commands are sent as plain text strings via radio uplink, terminated with a newline. The FSW parses the command string, executes the appropriate handler, and returns one or more binary telemetry packets via downlink.</p>
+<h2 id="command-format">Command Format</h2>
+<pre><code>COMMAND_NAME [arg1] [arg2] ...
+</code></pre>
+<p>Commands are case-sensitive and uppercase. Arguments are space-separated.</p>
+<h2 id="environmental-sensor-commands">Environmental Sensor Commands</h2>
+<p>These commands communicate with the RP2040 sensor MCU via UART at 9600 baud.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Response ID</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ENV_POLL</code></td>
+<td><code>POLL</code></td>
+<td>Poll all environmental sensors (17 float values)</td>
+</tr>
+<tr>
+<td><code>GET_GYRO</code></td>
+<td><code>GYRO</code></td>
+<td>Gyroscope X, Y, Z (°/s)</td>
+</tr>
+<tr>
+<td><code>GET_ACCEL</code></td>
+<td><code>ACCL</code></td>
+<td>Accelerometer X, Y, Z (m/s²)</td>
+</tr>
+<tr>
+<td><code>GET_MAG</code></td>
+<td><code>MAGN</code></td>
+<td>Magnetometer X, Y, Z (µT)</td>
+</tr>
+<tr>
+<td><code>GET_GRAVITY</code></td>
+<td><code>GRAV</code></td>
+<td>Gravity vector X, Y, Z (m/s²)</td>
+</tr>
+<tr>
+<td><code>GET_EULER</code></td>
+<td><code>EULR</code></td>
+<td>Euler angles X, Y, Z (°)</td>
+</tr>
+<tr>
+<td><code>GET_QUATERNION</code></td>
+<td><code>QUAT</code></td>
+<td>Quaternion W, X, Y, Z</td>
+</tr>
+<tr>
+<td><code>GET_ORIENTATION</code></td>
+<td><code>ADCS</code></td>
+<td>Heading, Roll, Pitch + Quaternion W, X, Y, Z</td>
+</tr>
+<tr>
+<td><code>GET_BME</code></td>
+<td><code>BME2</code></td>
+<td>Temperature (°C), Pressure (hPa), Altitude (m)</td>
+</tr>
+<tr>
+<td><code>GET_TEMP</code></td>
+<td><code>TEMP</code></td>
+<td>Temperature from BNO055 IMU (°C, integer)</td>
+</tr>
+<tr>
+<td><code>MORSE &lt;message&gt;</code></td>
+<td>—</td>
+<td>Play morse code on buzzer (fire-and-forget)</td>
+</tr>
+<tr>
+<td><code>RESET_ENV</code></td>
+<td>—</td>
+<td>Reset the RP2040 MCU (fire-and-forget)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="onboard-computer-commands">Onboard Computer Commands</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Response ID</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OBC_CPU</code></td>
+<td><code>OBCC</code></td>
+<td>CPU usage (%)</td>
+</tr>
+<tr>
+<td><code>OBC_RAM</code></td>
+<td><code>OBCR</code></td>
+<td>RAM usage (%)</td>
+</tr>
+<tr>
+<td><code>OBC_DISK</code></td>
+<td><code>OBCD</code></td>
+<td>Disk usage (%)</td>
+</tr>
+<tr>
+<td><code>OBC_PROCESSES</code></td>
+<td><code>OBCP</code></td>
+<td>Running process list (multi-packet, chunked)</td>
+</tr>
+<tr>
+<td><code>OBC_LIST_FILES [dir]</code></td>
+<td><code>OBCL</code></td>
+<td>File listing (multi-packet, chunked). Defaults to <code>capture</code> directory</td>
+</tr>
+<tr>
+<td><code>GET_HOSTNAME</code></td>
+<td><code>HOST</code></td>
+<td>Satellite hostname (11-byte string)</td>
+</tr>
+<tr>
+<td><code>WIFI_INFO</code></td>
+<td><code>WIFI</code></td>
+<td>WiFi SSID and IP address of the satellite AP</td>
+</tr>
+<tr>
+<td><code>OBC_RESTART</code></td>
+<td>—</td>
+<td>Plays morse "A" then reboots the Pi</td>
+</tr>
+<tr>
+<td><code>OBC_SHUTDOWN</code></td>
+<td>—</td>
+<td>Shuts down the Pi</td>
+</tr>
+</tbody>
+</table>
+<h2 id="power-system-commands">Power System Commands</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Response ID</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET_SOLAR</code></td>
+<td><code>SOLR</code></td>
+<td>4 solar panels: voltage (V) + current (mA) each</td>
+</tr>
+<tr>
+<td><code>EPS_STATUS</code></td>
+<td><code>EPSS</code></td>
+<td>EPS error code, 4 channel states, battery voltage</td>
+</tr>
+<tr>
+<td><code>EPS CH&lt;n&gt;,&lt;0\|1&gt;</code></td>
+<td><code>EPSS</code></td>
+<td>Set EPS channel n on (1) or off (0)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="payload-commands">Payload Commands</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Response ID</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TAKE_PHOTO</code></td>
+<td><code>PHOT</code></td>
+<td>Capture image, returns filename</td>
+</tr>
+<tr>
+<td><code>SEND_IMAGE &lt;file&gt; [chunk_sz]</code></td>
+<td><code>SEND</code></td>
+<td>Transmit image file (paced transfer)</td>
+</tr>
+<tr>
+<td><code>RETRANSMIT &lt;file&gt; &lt;pkt1&gt; [pkt2...]</code></td>
+<td><code>RETX</code></td>
+<td>Retransmit specific packets</td>
+</tr>
+</tbody>
+</table>
+<h2 id="beacon-commands">Beacon Commands</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Response ID</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BEACON_ON [interval]</code></td>
+<td><code>BECN</code></td>
+<td>Enable health beacon (default 5s interval)</td>
+</tr>
+<tr>
+<td><code>BEACON_OFF</code></td>
+<td><code>BECN</code></td>
+<td>Disable health beacon</td>
+</tr>
+</tbody>
+</table>
+<h2 id="multi-packet-responses">Multi-Packet Responses</h2>
+<p>Some commands return data too large for a single radio packet. These use the <code>chunk_data()</code> function to split the response:</p>
+<pre><code class="language-python">def chunk_data(data, identifier, max_chunk_size=None):
+    # max_chunk_size defaults to (radio_chunk_size - 5)
+    # 4 bytes for identifier + 1 byte for \n appended by radio.py
+    # Each chunk: [4-byte ID][payload_data]
+</code></pre>
+<p>Multi-packet responses are sent with a delay between packets (<code>DEFAULT_TX_DELAY = 0.25s</code>) to avoid overwhelming the receiver.</p>
+<h2 id="paced-image-transfer">Paced Image Transfer</h2>
+<p>Image transfer uses a special windowed mechanism:</p>
+<ol>
+<li>FSW returns <code>('WINDOWED', [packet_list])</code> tuple</li>
+<li>Main loop calls <code>send_paced()</code> which transmits each packet with a 0.25s delay</li>
+<li>Progress is logged every 50 packets</li>
+<li>After all packets: an <code>XFRC</code> packet is sent with the total packet count</li>
+<li>Ground station checks for missing packets and can request retransmission</li>
+</ol>
+<p>See <a href="../../ground-station/image-transfer/">Image Transfer</a> for the full transfer protocol.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../architecture/" class="btn btn-neutral float-left" title="Architecture"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../telemetry/" class="btn btn-neutral float-right" title="Telemetry Reference">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>&copy; 2024 ETHOS Labs, LLC</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../architecture/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../telemetry/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

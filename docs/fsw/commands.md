@@ -41,6 +41,7 @@ These commands communicate with the RP2040 sensor MCU via UART at 9600 baud.
 | `OBC_PROCESSES` | `OBCP` | Running process list (multi-packet, chunked) |
 | `OBC_LIST_FILES [dir]` | `OBCL` | File listing (multi-packet, chunked). Defaults to `capture` directory |
 | `GET_HOSTNAME` | `HOST` | Satellite hostname (11-byte string) |
+| `WIFI_INFO` | `WIFI` | WiFi SSID and IP address of the satellite AP |
 | `OBC_RESTART` | — | Plays morse "A" then reboots the Pi |
 | `OBC_SHUTDOWN` | — | Shuts down the Pi |
 

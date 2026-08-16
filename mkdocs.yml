@@ -6,13 +6,17 @@ copyright: "&copy; 2024 ETHOS Labs, LLC"
 theme:
   name: readthedocs
 
+markdown_extensions:
+  - admonition
+
 nav:
   - Home: index.md
   - 'Build Guide':
     - TEMPEST Components Guide: tempest_components.md
     - Building Your CubeSat: tempest_build_guide.md
   - Setup:
-    - Connecting to Your Wifi: connecting_to_wifi.md
+    - 'Quick Start: TEMPEST-0 on RFM69': quickstart.md
+    - Connecting to TEMPEST: connecting_to_wifi.md
   - Flight Software:
     - Architecture: fsw/architecture.md
     - Command Protocol: fsw/commands.md
@@ -31,6 +35,3 @@ nav:
     - Telemetry ID Quick Reference: reference/telemetry-ids.md
     - Packet Size Reference: reference/packet-sizes.md
     - Troubleshooting: reference/troubleshooting.md
-
-extra_css:
-  - overrides/custom.css
