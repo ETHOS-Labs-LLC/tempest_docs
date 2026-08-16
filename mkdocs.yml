@@ -21,7 +21,7 @@ nav:
     - Building Your CubeSat: tempest_build_guide.md
   - Setup:
     - 'Quick Start: TEMPEST-0 on RFM69': quickstart.md
-    - Connecting to TEMPEST: connecting_to_wifi.md
+    - TEMPEST Setup: tempest_setup.md
   - Flight Software:
     - Architecture: fsw/architecture.md
     - Command Protocol: fsw/commands.md
