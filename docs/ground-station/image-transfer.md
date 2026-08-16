@@ -17,8 +17,8 @@ Image transfer over radio is the most complex operation in the TEMPEST system. I
                             GROUND STATION (Browser)
 
 ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
-│  radio   │───►│  parse   │───►│ reassemble│──►│  base64  │───►│  gunzip  │
-│   RX     │    │ metadata │    │  chunks  │    │  decode  │    │ decompress│
+│  radio   │───►│  parse   │───►│reassemble│ ──►│  base64  │───►│  gunzip  │
+│   RX     │    │ metadata │    │  chunks  │    │  decode  │    │decompress│
 └──────────┘    └──────────┘    └──────────┘    └──────────┘    └──────────┘
                                                                      │
                                                               ┌──────▼──────┐

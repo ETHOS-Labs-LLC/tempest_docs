@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../stylesheets/extra.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -146,10 +147,10 @@
 <p><img alt="alt text" src="../image.png" /></p>
 <h2 id="architecture">Architecture</h2>
 <p>The TEMPEST ground station uses a browser-based interface that communicates with the satellite through a Pico MCU radio relay.</p>
-<pre><code>┌──────────────┐    USB CDC     ┌──────────────┐    RF Link    ┌──────────────┐
+<pre><code>┌──────────────┐    USB CDC      ┌──────────────┐    RF Link     ┌──────────────┐
 │   Browser    │◄──(WebSerial)──►│  GS Pico MCU │◄──(RFM69/95)──►│  Satellite   │
-│  (Chrome)    │                │  (Radio HW)  │               │  (Pi Zero)   │
-└──────────────┘                └──────────────┘               └──────────────┘
+│  (Chrome)    │                 │  (Radio HW)  │                │  (Pi Zero)   │
+└──────────────┘                 └──────────────┘                └──────────────┘
 </code></pre>
 <p><strong>Browser</strong> (GS): Runs entirely client-side. No server backend required. Uses the WebSerial API (Chrome/Edge) to communicate with the GS Pico MCU via USB CDC serial.</p>
 <p><strong>GS Pico MCU</strong>: Bridges USB serial to radio. Forwards commands from browser to satellite via radio uplink and relays telemetry from satellite to browser via radio downlink.</p>
