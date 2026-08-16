@@ -157,9 +157,9 @@ Classification banners appear at the top and bottom of the interface. Change the
 | TOP SECRET | Orange/Yellow |
 | TOP SECRET//SCI | Orange/Yellow |
 
-![Placeholder: Classification banner examples](../img/placeholder-gs-classification.png)
+![Classification banner examples](image-12.png)
 
-!! Note
+!!! Note
     This is eye candy and should not be taken as a real classification. 
 
 ## Soft Reset
