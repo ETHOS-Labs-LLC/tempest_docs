@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
-        <link href="../../overrides/custom.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -53,7 +52,9 @@
               </ul>
               <p class="caption"><span class="caption-text">Setup</span></p>
               <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to Your Wifi</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Quick Start: TEMPEST-0 on RFM69</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to TEMPEST</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Flight Software</span></p>
@@ -113,6 +114,16 @@
     <li class="toctree-l3"><a class="reference internal" href="#fragmented-packets-in-browser">Fragmented Packets in Browser</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#image-not-displaying-after-transfer">Image Not Displaying After Transfer</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#wifi-ap-issues">WiFi / AP Issues</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#cant-see-the-satellites-ssid">Can't See the Satellite's SSID</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#forgot-the-ap-password">Forgot the AP Password</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#wifi_info-returns-empty-ssid">WIFI_INFO Returns Empty SSID</a>
     </li>
         </ul>
     </li>
@@ -266,6 +277,36 @@
 <li><strong>Missing gzip header</strong> — Verify the file is actually gzip compressed (header: <code>0x1F 0x8B</code>)</li>
 <li><strong>Chunk ordering</strong> — Base64 padding (<code>==</code>) should only be on the final chunk</li>
 </ol>
+<h2 id="wifi-ap-issues">WiFi / AP Issues</h2>
+<h3 id="cant-see-the-satellites-ssid">Can't See the Satellite's SSID</h3>
+<p><strong>Symptom:</strong> After <code>install.sh</code> and reboot, your laptop doesn't see
+<code>TEMPEST-N</code> in the wifi list.</p>
+<p><strong>Possible Causes:</strong></p>
+<ol>
+<li><strong>Hostname not set before install</strong> — the AP profile bakes the hostname
+   into the SSID at install time. Verify with <code>nmcli con show tempest-ap |
+   grep 802-11-wireless.ssid</code>. If it's wrong, fix the hostname
+   (<code>sudo raspi-config nonint do_hostname TEMPEST-3</code>) and recreate the
+   profile, or edit <code>802-11-wireless.ssid</code> on the existing profile.</li>
+<li><strong>Another wifi profile beat the AP to activation</strong> — confirm the AP is
+   active with <code>nmcli con show --active</code>. If a client profile is active
+   instead, set its <code>connection.autoconnect</code> to <code>no</code> and reboot.</li>
+<li><strong>The Pi Zero W is out of range</strong> — the AP is 2.4 GHz only and the Pi
+   antenna is weak.</li>
+</ol>
+<h3 id="forgot-the-ap-password">Forgot the AP Password</h3>
+<p><strong>Symptom:</strong> Can't connect to the satellite's AP because the PSK was rotated.</p>
+<p><strong>Fix:</strong> Pull the SD card, mount it on a laptop, and edit
+<code>/etc/NetworkManager/system-connections/tempest-ap.nmconnection</code>. Update the
+<code>psk</code> field under <code>[wifi-security]</code>. Reinsert and reboot.</p>
+<h3 id="wifi_info-returns-empty-ssid"><code>WIFI_INFO</code> Returns Empty SSID</h3>
+<p><strong>Symptom:</strong> The <code>WIFI</code> telemetry packet arrives but the SSID field is the
+hostname rather than the actual AP SSID.</p>
+<p><strong>Cause:</strong> <code>nmcli</code> query failed, falling back to <code>socket.gethostname()</code>. This
+usually means NetworkManager isn't running or the <code>tempest-ap</code> profile isn't
+active.</p>
+<p><strong>Fix:</strong> SSH in, check <code>systemctl status NetworkManager</code> and
+<code>nmcli con show --active</code>. Restart NetworkManager if needed.</p>
 <h2 id="sensor-issues">Sensor Issues</h2>
 <h3 id="stale-data-on-first-read">Stale Data on First Read</h3>
 <p><strong>Symptom:</strong> First sensor command returns incorrect values, subsequent reads are normal.</p>

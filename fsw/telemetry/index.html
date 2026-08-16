@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
-        <link href="../../overrides/custom.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -53,7 +52,9 @@
               </ul>
               <p class="caption"><span class="caption-text">Setup</span></p>
               <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to Your Wifi</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Quick Start: TEMPEST-0 on RFM69</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to TEMPEST</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Flight Software</span></p>
@@ -95,6 +96,8 @@
     <li class="toctree-l3"><a class="reference internal" href="#obcc-obcr-obcd-obc-single-values">OBCC / OBCR / OBCD — OBC Single Values</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#host-hostname">HOST — Hostname</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#wifi-wifi-access-point-info">WIFI — WiFi Access Point Info</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#becn-health-beacon">BECN — Health Beacon</a>
     </li>
@@ -696,6 +699,41 @@
 </tbody>
 </table>
 <p><strong>Total: 15 bytes</strong></p>
+<h3 id="wifi-wifi-access-point-info">WIFI — WiFi Access Point Info</h3>
+<pre><code>struct.pack('4s32s15s', b'WIFI', ssid_bytes, ip_bytes)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Offset</th>
+<th>Size</th>
+<th>Type</th>
+<th>Field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>4</td>
+<td>char[4]</td>
+<td>Identifier</td>
+</tr>
+<tr>
+<td>4</td>
+<td>32</td>
+<td>char[32]</td>
+<td>SSID (space-padded UTF-8)</td>
+</tr>
+<tr>
+<td>36</td>
+<td>15</td>
+<td>char[15]</td>
+<td>IPv4 address (space-padded ASCII, e.g. <code>10.42.0.1</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total: 51 bytes</strong></p>
+<p>SSID is queried from the active NetworkManager wifi connection and falls back to the system hostname. IP is the first address reported by <code>hostname -I</code> (the AP gateway on the <code>tempest-ap</code> profile is typically <code>10.42.0.1</code>).</p>
 <h3 id="becn-health-beacon">BECN — Health Beacon</h3>
 <pre><code>struct.pack('4sIffff', b'BECN', uptime, cpu, ram, disk, temp)
 </code></pre>

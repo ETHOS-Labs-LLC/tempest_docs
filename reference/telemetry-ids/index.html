@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
-        <link href="../../overrides/custom.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -53,7 +52,9 @@
               </ul>
               <p class="caption"><span class="caption-text">Setup</span></p>
               <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to Your Wifi</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Quick Start: TEMPEST-0 on RFM69</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to TEMPEST</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Flight Software</span></p>
@@ -235,6 +236,13 @@
 <td><code>GET_HOSTNAME</code></td>
 </tr>
 <tr>
+<td><code>WIFI</code></td>
+<td>WiFi SSID + IP</td>
+<td>51</td>
+<td><code>4s + 32s + 15s</code></td>
+<td><code>WIFI_INFO</code></td>
+</tr>
+<tr>
 <td><code>PHOT</code></td>
 <td>Photo Captured</td>
 <td>Variable</td>
@@ -325,6 +333,7 @@ SOLR                            →  36 bytes (8 floats)
 EPSS                            →  28 bytes (5 ints + 1 float)
 OBCC, OBCR, OBCD               →   8 bytes (1 float)
 HOST                            →  15 bytes (11-char string)
+WIFI                            →  51 bytes (32-char SSID + 15-char IP)
 BECN                            →  24 bytes (1 uint + 4 floats)
 XFRC                            →   8 bytes (1 uint)
 </code></pre>

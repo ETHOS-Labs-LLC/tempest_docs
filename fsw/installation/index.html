@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
-        <link href="../../overrides/custom.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -53,7 +52,9 @@
               </ul>
               <p class="caption"><span class="caption-text">Setup</span></p>
               <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to Your Wifi</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Quick Start: TEMPEST-0 on RFM69</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../connecting_to_wifi/">Connecting to TEMPEST</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Flight Software</span></p>
@@ -84,7 +85,13 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#4-pigpiod-service">4. pigpiod Service</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#5-systemd-service">5. Systemd Service</a>
+    <li class="toctree-l3"><a class="reference internal" href="#5-wifi-access-point">5. WiFi Access Point</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#ssid-sync-to-hostname">SSID Sync to Hostname</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#6-systemd-service">6. Systemd Service</a>
     </li>
         </ul>
     </li>
@@ -220,20 +227,88 @@
 <pre><code class="language-bash">sudo systemctl enable pigpiod
 sudo systemctl start pigpiod
 </code></pre>
-<h3 id="5-systemd-service">5. Systemd Service</h3>
+<h3 id="5-wifi-access-point">5. WiFi Access Point</h3>
+<p>The installer reconfigures NetworkManager so the Pi stops joining the default
+workshop network and instead broadcasts its own access point. The AP profile is
+named <code>tempest-ap</code> with:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSID</td>
+<td><code>$(hostname)</code> (e.g. <code>TEMPEST-1</code>, <code>TEMPEST-2</code>, …)</td>
+</tr>
+<tr>
+<td>Mode</td>
+<td>AP (2.4 GHz, <code>band bg</code>)</td>
+</tr>
+<tr>
+<td>IPv4</td>
+<td><code>shared</code> — NetworkManager runs DHCP + NAT (gateway <code>10.42.0.1</code>)</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>WPA2-PSK</td>
+</tr>
+<tr>
+<td>Default PSK</td>
+<td><code>Hack Space</code> (edit <code>AP_PSK</code> in <code>install.sh</code> to rotate)</td>
+</tr>
+</tbody>
+</table>
+<p>Existing wifi profiles have their <code>autoconnect</code> flag cleared so the AP wins on
+the next boot. The installer intentionally does <strong>not</strong> call <code>nmcli con up
+tempest-ap</code> because activating an AP on a single-radio Pi Zero would drop the
+SSH session running the script — the AP comes up cleanly after the final
+<code>sudo reboot</code>.</p>
+<h4 id="ssid-sync-to-hostname">SSID Sync to Hostname</h4>
+<p><code>install.sh</code> bakes the SSID into the <code>tempest-ap</code> NM profile using whatever
+hostname is set on the build machine at install time. Because the workshop
+flow generates one image and flashes it onto many SD cards (with per-unit
+hostnames set via Raspberry Pi Imager customizations), the baked-in SSID
+would otherwise be wrong on every cloned unit.</p>
+<p>To fix this, the installer also installs:</p>
+<ul>
+<li><code>/usr/local/bin/tempest-ap-ssid-sync</code> — a small shell script that rewrites
+  the <code>ssid=</code> line of <code>/etc/NetworkManager/system-connections/tempest-ap.nmconnection</code>
+  to match <code>$(hostname)</code>.</li>
+<li><code>/etc/systemd/system/tempest-ap-ssid-sync.service</code> — a <code>Type=oneshot</code> unit
+  ordered <code>Before=NetworkManager.service</code>, so the rewrite happens before NM
+  reads the profile and brings the AP up.</li>
+</ul>
+<p>The service runs on every boot. If the hostname matches the existing SSID,
+the <code>sed</code> is a no-op; if it doesn't, NM picks up the new SSID the moment it
+loads the profile, with no down/up flip required.</p>
+<p>To rotate the PSK on a deployed unit, SSH in and run:</p>
+<pre><code class="language-bash">sudo nmcli con modify tempest-ap wifi-sec.psk &quot;new-password&quot;
+sudo nmcli con down tempest-ap &amp;&amp; sudo nmcli con up tempest-ap
+</code></pre>
+<p>This drops every connected client (including your SSH session) — reconnect to
+the AP with the new key.</p>
+<h3 id="6-systemd-service">6. Systemd Service</h3>
 <p>The FSW runs as a systemd service that starts on boot and restarts on failure:</p>
 <pre><code class="language-ini">[Unit]
 Description=TEMPEST Flight Software
 After=multi-user.target pigpiod.service
 
 [Service]
-ExecStart=/usr/bin/python /home/ethos/TEMPEST_FSW/main.py
+ExecStart=/usr/bin/python ${FSW_DIR}/main.py
+WorkingDirectory=${FSW_DIR}
 Restart=always
-User=ethos
+User=root
 
 [Install]
 WantedBy=multi-user.target
 </code></pre>
+<p><code>${FSW_DIR}</code> is expanded by <code>install.sh</code> at install time to the absolute
+path of the FSW checkout (the directory containing <code>install.sh</code> itself).
+This avoids hardcoding a <code>/home/&lt;user&gt;/TEMPEST_FSW</code> path that would break
+if the default username is changed via Raspberry Pi Imager.</p>
 <h2 id="service-management">Service Management</h2>
 <pre><code class="language-bash"># Start the FSW
 sudo systemctl start tempest_fsw
