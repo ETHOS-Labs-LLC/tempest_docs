@@ -65,16 +65,20 @@ card or upgrading the image), use `Raspberry Pi Imager`:
 
 1. Download and install
    [Raspberry Pi Imager](https://www.raspberrypi.com/software/) for your OS.
-2. Download a TEMPEST image:
-    - TEMPEST v1.1:
-      [Tempest_v1.1.img](https://drive.google.com/file/d/1K1Nw7Q_Xnd-AX9t3xWBUItROa7UGI167/view?usp=drive_link)
-      — `SHA256: 1b8bcd935839535602cd83294fcc94d98414a8966752e596f9455d1c1249bfef`
+2. Download the TEMPEST image that matches your OBC — pick the variant for the
+   Pi Zero model in your unit:
+    - TEMPEST v1 (Pi Zero W, deployed before 2025-01-01):
+      [TEMPESTv1-2.0.img.gz](https://github.com/ETHOS-Labs-LLC/tempest_docs/releases/download/2.0/TEMPESTv1-2.0.img.gz)
+      — `SHA256: e54cd213f92620a667ebb81847de100791ffc617d98a7f76770968632c304b58`
+    - TEMPEST v2 (Pi Zero 2W, deployed after 2025-02-01):
+      [TempestV2-2.0.img.gz](https://github.com/ETHOS-Labs-LLC/tempest_docs/releases/download/2.0/TempestV2-2.0.img.gz)
+      — `SHA256: 67cca06f24f098bfa778dc5b13c7e40fffa8018e986cd3c7a62aab77afad22b5`
 3. Take the microSD card out of TEMPEST by removing the four T8 screws on the
    X+ Solar Panel (the panel to your left when facing the RBF pin / charging
    port).
 4. In `Raspberry Pi Imager`, choose **`CHOOSE OS` → `Use custom`** and select
-   the downloaded `.img` file, then choose your microSD card under
-   **`CHOOSE STORAGE`**.
+   the downloaded `.img.gz` file (Imager decompresses it on the fly), then
+   choose your microSD card under **`CHOOSE STORAGE`**.
 
     ![Choose OS in Raspberry Pi Imager](image.png)
     ![Use custom](image-1.png)
@@ -83,54 +87,18 @@ card or upgrading the image), use `Raspberry Pi Imager`:
     ![Select microSD card](image-4.png)
     ![Click Next](image-5.png)
 
-5. Click **`NEXT`**, then **`EDIT SETTINGS`**.
-
-    ![Edit settings](image-6.png)
-
-6. Configure the customizations. The image ships with the AP, SSH, and the
-   FSW already provisioned — you only need to set the hostname:
-    - **Hostname**: set to `TEMPEST-N` where `N` is a unique integer in your
-      fleet (1–25). This is **critical**: the FSW derives the radio node
-      address from the integer at the end of the hostname
-      (`int(hostname.split("-")[1]) * 10`), so two units with the same
-      hostname will collide on the air. Make sure every TEMPEST in your fleet
-      has a different `N`.
-
-        ![Hostname](image-7.png)
-        ![Set hostname value](image-8.png)
-
-    - **Username/password**: leave at defaults (`tempest` / `tempest`).
-      If you change the username here, that's fine — `install.sh` records
-      the FSW directory by absolute path when it builds the service unit, so
-      the service works under any home directory. The username itself isn't
-      hardcoded anywhere in the FSW.
-
-        ![Username and password](image-9.png)
-
-    - **WiFi / SSH**: skip these. The image is already configured to broadcast
-      the `tempest-ap` access point on first boot and SSH is already enabled.
-      Do not provide an external wifi SSID — the Pi Zero W has a single radio
-      and a configured client network can prevent the AP from coming up.
-
-7. **`SAVE`** the customizations, then **`YES`** to apply, then **`YES`** to
-   confirm overwriting the card.
-
-    ![Save customizations](image-12.png)
-    ![Apply customizations](image-13.png)
-    ![Confirm overwrite](image-14.png)
-
-8. Wait for `Raspberry Pi Imager` to write and verify the image.
-
-    ![Writing](image-15.png)
-    ![Write complete](image-16.png)
-
-9. Eject the microSD card, reinstall it in the Pi Zero W, and power the
+5. Click **`NEXT`**. When Imager asks whether to apply OS customization,
+   choose **`NO`** — the v2.0 images ship fully provisioned (hostname, AP,
+   SSH, user, and FSW) and don't need any Imager-side settings. Confirm
+   **`YES`** to overwrite the card.
+6. Wait for `Raspberry Pi Imager` to write and verify the image.
+7. Eject the microSD card, reinstall it in the Pi Zero, and power the
    satellite up. The Pi will shut down after ~30 seconds on first boot
    — this is expected. Insert and remove the RBF pin to reboot it.
-10. After a few minutes the AP will be live. Look for the `tempest-ap` SSID
-    (matching the hostname you set, e.g. `TEMPEST-3`) from your laptop and
-    follow the [Connecting from Your Laptop](#connecting-from-your-laptop)
-    steps above.
+8. After a few minutes the AP will be live. Look for the `tempest-ap` SSID
+   (matching the unit's hostname, e.g. `TEMPEST-3`) from your laptop and
+   follow the [Connecting from Your Laptop](#connecting-from-your-laptop)
+   steps above.
 
 ## Recovering an Unreachable Unit
 
