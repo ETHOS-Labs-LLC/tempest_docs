@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="ETHOS Labs, LLC" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Connecting to TEMPEST - TEMPEST Flight Software</title>
+    <title>TEMPEST Setup - TEMPEST Flight Software</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Connecting to TEMPEST";
-        var mkdocs_page_input_path = "connecting_to_wifi.md";
+        var mkdocs_page_name = "TEMPEST Setup";
+        var mkdocs_page_input_path = "tempest_setup.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -55,7 +55,7 @@
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quick Start: TEMPEST-0 on RFM69</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Connecting to TEMPEST</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">TEMPEST Setup</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#connecting-from-your-laptop">Connecting from Your Laptop</a>
     </li>
@@ -124,7 +124,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
           <li class="breadcrumb-item">Setup</li>
-      <li class="breadcrumb-item active">Connecting to TEMPEST</li>
+      <li class="breadcrumb-item active">TEMPEST Setup</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -182,10 +182,14 @@ card or upgrading the image), use <code>Raspberry Pi Imager</code>:</p>
 <ol>
 <li>Download and install
    <a href="https://www.raspberrypi.com/software/">Raspberry Pi Imager</a> for your OS.</li>
-<li>Download a TEMPEST image:<ul>
-<li>TEMPEST v1.1:
-  <a href="https://drive.google.com/file/d/1K1Nw7Q_Xnd-AX9t3xWBUItROa7UGI167/view?usp=drive_link">Tempest_v1.1.img</a>
-  — <code>SHA256: 1b8bcd935839535602cd83294fcc94d98414a8966752e596f9455d1c1249bfef</code></li>
+<li>Download the TEMPEST image that matches your OBC — pick the variant for the
+   Pi Zero model in your unit:<ul>
+<li>TEMPEST v1 (Pi Zero W, deployed before 2025-01-01):
+  <a href="https://github.com/ETHOS-Labs-LLC/tempest_docs/releases/download/2.0/TEMPESTv1-2.0.img.gz">TEMPESTv1-2.0.img.gz</a>
+  — <code>SHA256: e54cd213f92620a667ebb81847de100791ffc617d98a7f76770968632c304b58</code></li>
+<li>TEMPEST v2 (Pi Zero 2W, deployed after 2025-02-01):
+  <a href="https://github.com/ETHOS-Labs-LLC/tempest_docs/releases/download/2.0/TempestV2-2.0.img.gz">TempestV2-2.0.img.gz</a>
+  — <code>SHA256: 67cca06f24f098bfa778dc5b13c7e40fffa8018e986cd3c7a62aab77afad22b5</code></li>
 </ul>
 </li>
 <li>Take the microSD card out of TEMPEST by removing the four T8 screws on the
@@ -193,8 +197,8 @@ card or upgrading the image), use <code>Raspberry Pi Imager</code>:</p>
    port).</li>
 <li>
 <p>In <code>Raspberry Pi Imager</code>, choose <strong><code>CHOOSE OS</code> → <code>Use custom</code></strong> and select
-   the downloaded <code>.img</code> file, then choose your microSD card under
-   <strong><code>CHOOSE STORAGE</code></strong>.</p>
+   the downloaded <code>.img.gz</code> file (Imager decompresses it on the fly), then
+   choose your microSD card under <strong><code>CHOOSE STORAGE</code></strong>.</p>
 <p><img alt="Choose OS in Raspberry Pi Imager" src="../image.png" />
 <img alt="Use custom" src="../image-1.png" />
 <img alt="Select image file" src="../image-2.png" />
@@ -203,60 +207,19 @@ card or upgrading the image), use <code>Raspberry Pi Imager</code>:</p>
 <img alt="Click Next" src="../image-5.png" /></p>
 </li>
 <li>
-<p>Click <strong><code>NEXT</code></strong>, then <strong><code>EDIT SETTINGS</code></strong>.</p>
-<p><img alt="Edit settings" src="../image-6.png" /></p>
+<p>Click <strong><code>NEXT</code></strong>. When Imager asks whether to apply OS customization,
+   choose <strong><code>NO</code></strong> — the v2.0 images ship fully provisioned (hostname, AP,
+   SSH, user, and FSW) and don't need any Imager-side settings. Confirm
+   <strong><code>YES</code></strong> to overwrite the card.</p>
 </li>
-<li>
-<p>Configure the customizations. The image ships with the AP, SSH, and the
-   FSW already provisioned — you only need to set the hostname:</p>
-<ul>
-<li>
-<p><strong>Hostname</strong>: set to <code>TEMPEST-N</code> where <code>N</code> is a unique integer in your
-  fleet (1–25). This is <strong>critical</strong>: the FSW derives the radio node
-  address from the integer at the end of the hostname
-  (<code>int(hostname.split("-")[1]) * 10</code>), so two units with the same
-  hostname will collide on the air. Make sure every TEMPEST in your fleet
-  has a different <code>N</code>.</p>
-<p><img alt="Hostname" src="../image-7.png" />
-<img alt="Set hostname value" src="../image-8.png" /></p>
-</li>
-<li>
-<p><strong>Username/password</strong>: leave at defaults (<code>tempest</code> / <code>tempest</code>).
-  If you change the username here, that's fine — <code>install.sh</code> records
-  the FSW directory by absolute path when it builds the service unit, so
-  the service works under any home directory. The username itself isn't
-  hardcoded anywhere in the FSW.</p>
-<p><img alt="Username and password" src="../image-9.png" /></p>
-</li>
-<li>
-<p><strong>WiFi / SSH</strong>: skip these. The image is already configured to broadcast
-  the <code>tempest-ap</code> access point on first boot and SSH is already enabled.
-  Do not provide an external wifi SSID — the Pi Zero W has a single radio
-  and a configured client network can prevent the AP from coming up.</p>
-</li>
-</ul>
-</li>
-<li>
-<p><strong><code>SAVE</code></strong> the customizations, then <strong><code>YES</code></strong> to apply, then <strong><code>YES</code></strong> to
-   confirm overwriting the card.</p>
-<p><img alt="Save customizations" src="../image-12.png" />
-<img alt="Apply customizations" src="../image-13.png" />
-<img alt="Confirm overwrite" src="../image-14.png" /></p>
-</li>
-<li>
-<p>Wait for <code>Raspberry Pi Imager</code> to write and verify the image.</p>
-<p><img alt="Writing" src="../image-15.png" />
-<img alt="Write complete" src="../image-16.png" /></p>
-</li>
-<li>
-<p>Eject the microSD card, reinstall it in the Pi Zero W, and power the
+<li>Wait for <code>Raspberry Pi Imager</code> to write and verify the image.</li>
+<li>Eject the microSD card, reinstall it in the Pi Zero, and power the
    satellite up. The Pi will shut down after ~30 seconds on first boot
-   — this is expected. Insert and remove the RBF pin to reboot it.</p>
-</li>
+   — this is expected. Insert and remove the RBF pin to reboot it.</li>
 <li>After a few minutes the AP will be live. Look for the <code>tempest-ap</code> SSID
-    (matching the hostname you set, e.g. <code>TEMPEST-3</code>) from your laptop and
-    follow the <a href="#connecting-from-your-laptop">Connecting from Your Laptop</a>
-    steps above.</li>
+   (matching the unit's hostname, e.g. <code>TEMPEST-3</code>) from your laptop and
+   follow the <a href="#connecting-from-your-laptop">Connecting from Your Laptop</a>
+   steps above.</li>
 </ol>
 <h2 id="recovering-an-unreachable-unit">Recovering an Unreachable Unit</h2>
 <p>If a satellite's AP is misconfigured or you've forgotten the PSK and can't

@@ -94,5 +94,5 @@ The Configure tab provides settings panels:
 | Connection | USB to GS Pico MCU |
 | HTTPS | Required for WebSerial (or localhost) |
 
-The live deployment is available at [gs.ethoslabs.space](https://gs.ethoslabs.space).
+The live deployment is available at [gs.ethoslabs.space](https://gs.ethoslabs.space). 
 
